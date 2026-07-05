@@ -89,8 +89,13 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
     <body>
         ";
         // line 22
-        yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
+        yield from $this->load("components/_navbar.html.twig", 22)->unwrap()->yield($context);
         // line 23
+        yield "        
+        ";
+        // line 24
+        yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
+        // line 25
         yield "    </body>
 </html>
 ";
@@ -200,7 +205,7 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         yield from [];
     }
 
-    // line 22
+    // line 24
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -243,7 +248,7 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  204 => 22,  181 => 11,  170 => 12,  167 => 11,  154 => 10,  143 => 8,  130 => 7,  107 => 5,  94 => 23,  92 => 22,  88 => 20,  80 => 16,  77 => 15,  75 => 14,  72 => 13,  70 => 10,  67 => 9,  65 => 7,  60 => 5,  54 => 1,);
+        return array (  209 => 24,  186 => 11,  175 => 12,  172 => 11,  159 => 10,  148 => 8,  135 => 7,  112 => 5,  99 => 25,  97 => 24,  94 => 23,  92 => 22,  88 => 20,  80 => 16,  77 => 15,  75 => 14,  72 => 13,  70 => 10,  67 => 9,  65 => 7,  60 => 5,  54 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -269,6 +274,8 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         {% endif %}
     </head>
     <body>
+        {% include \x27components/_navbar.html.twig\x27 %}
+        
         {% block body %}{% endblock %}
     </body>
 </html>

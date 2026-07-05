@@ -1,0 +1,29 @@
+<div class="container mt-5">
+	<div class="row justify-content-center">
+		<div class="col-md-8 col-lg-6">
+			<h2 class="mb-4">Contact</h2>
+			<p>Pour toute question ou réservation, n'hésitez pas à nous contacter :</p>
+			<ul>
+				<li>Email : contact@viteetgourmand.fr</li>
+				<li>Téléphone : 01 23 45 67 89</li>
+				<li>Adresse : 123 Rue de la Paix, 33000 Bordeaux</li>
+			</ul>
+			<p>Vous pouvez également remplir le formulaire de contact ci-dessous :</p>
+			<form action="{{ path('app_contact') }}" method="post">
+				<div class="mb-3">
+					<label for="name" class="form-label">Nom :</label>
+					<input type="text" class="form-control" id="name" name="name" required>
+				</div>
+				<div class="mb-3">
+					<label for="email" class="form-label">Email :</label>
+					<input type="email" class="form-control" id="email" name="email" required>
+				</div>
+				<div class="mb-3">
+					<label for="message" class="form-label">Message :</label>
+					<textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+				</div>
+				<button type="submit" class="btn btn-primary">Envoyer</button>
+			</form>
+		</div>
+	</div>
+</div>

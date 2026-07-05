@@ -74,7 +74,7 @@ class __TwigTemplate_f928323b8c0937bd93f253c8718956a7 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
 
-        yield "Hello HomeController!";
+        yield "Vite & Gourmand";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
 
@@ -98,22 +98,48 @@ class __TwigTemplate_f928323b8c0937bd93f253c8718956a7 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
         // line 6
-        yield "<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+        yield "<div class=\"container mt-5\">
+    <h1 class=\"mb-4\">🍽️ Nos menus</h1>
 
-<div class=\"example-wrapper\">
-    <h1>Hello ";
-        // line 12
-        yield (string) $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["controller_name"]) || array_key_exists("controller_name", $context) ? $context["controller_name"] : (function () { throw new RuntimeError('Variable "controller_name" does not exist.', 12, $this->source); })()), "html", null, true);
-        yield "! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/Pulsecrea/mes dev purebasic/ecf - Vite&Gourmand/vite-gourmand/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>D:/Pulsecrea/mes dev purebasic/ecf - Vite&Gourmand/vite-gourmand/templates/home/index.html.twig</code></li>
-    </ul>
+    <div class=\"row\">
+        ";
+        // line 10
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["menus"]) || array_key_exists("menus", $context) ? $context["menus"] : (function () { throw new RuntimeError('Variable "menus" does not exist.', 10, $this->source); })()));
+        $context['loop'] = [
+          'parent' => $context['_parent'],
+          'index0' => 0,
+          'index'  => 1,
+          'first'  => true,
+        ];
+        if (is_array($context['_seq']) || (is_object($context['_seq']) && $context['_seq'] instanceof \Countable)) {
+            $length = count($context['_seq']);
+            $context['loop']['revindex0'] = $length - 1;
+            $context['loop']['revindex'] = $length;
+            $context['loop']['length'] = $length;
+            $context['loop']['last'] = 1 === $length;
+        }
+        foreach ($context['_seq'] as $context["_key"] => $context["menu"]) {
+            // line 11
+            yield "            ";
+            yield from $this->load("components/_menu_card.html.twig", 11)->unwrap()->yield($context);
+            // line 12
+            yield "        ";
+            ++$context['loop']['index0'];
+            ++$context['loop']['index'];
+            $context['loop']['first'] = false;
+            if (isset($context['loop']['revindex0'], $context['loop']['revindex'])) {
+                --$context['loop']['revindex0'];
+                --$context['loop']['revindex'];
+                $context['loop']['last'] = 0 === $context['loop']['revindex0'];
+            }
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['menu'], $context['_parent'], $context['loop']);
+        $context = array_intersect_key($context, $_parent);
+        $context += $_parent;
+        // line 13
+        yield "    </div>
 </div>
 ";
         
@@ -146,31 +172,25 @@ class __TwigTemplate_f928323b8c0937bd93f253c8718956a7 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  109 => 12,  101 => 6,  88 => 5,  65 => 3,  42 => 1,);
+        return array (  142 => 13,  127 => 12,  124 => 11,  107 => 10,  101 => 6,  88 => 5,  65 => 3,  42 => 1,);
     }
 
     public function getSourceContext(): Source
     {
         return new Source("{% extends \x27base.html.twig\x27 %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Vite & Gourmand{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class=\"container mt-5\">
+    <h1 class=\"mb-4\">🍽️ Nos menus</h1>
 
-<div class=\"example-wrapper\">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/Pulsecrea/mes dev purebasic/ecf - Vite&Gourmand/vite-gourmand/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>D:/Pulsecrea/mes dev purebasic/ecf - Vite&Gourmand/vite-gourmand/templates/home/index.html.twig</code></li>
-    </ul>
+    <div class=\"row\">
+        {% for menu in menus %}
+            {% include \x27components/_menu_card.html.twig\x27 %}
+        {% endfor %}
+    </div>
 </div>
-{% endblock %}
-", "home/index.html.twig", "D:\\Pulsecrea\\mes dev purebasic\\ecf - Vite&Gourmand\\vite-gourmand\\templates\\home\\index.html.twig");
+{% endblock %}", "home/index.html.twig", "D:\\Pulsecrea\\mes dev purebasic\\ecf - Vite&Gourmand\\vite-gourmand\\templates\\home\\index.html.twig");
     }
 }
