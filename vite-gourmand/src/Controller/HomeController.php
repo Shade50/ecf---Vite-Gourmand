@@ -39,6 +39,28 @@ final class HomeController extends AbstractController
             'prix' => 45
         ],
 
+    ],
+
+    'avis' => [
+
+        [
+            'nom' => 'Jean Dupont',
+            'note' => 5,
+            'commentaire' => 'Excellent service et plats délicieux !'
+        ],
+
+        [
+            'nom' => 'Marie Martin',
+            'note' => 4,
+            'commentaire' => 'Très bon rapport qualité/prix.'
+        ],
+
+        [
+            'nom' => 'Pierre Durand',
+            'note' => 3,
+            'commentaire' => 'Plats corrects mais service un peu lent.'
+        ],
+
     ]
 
 ]);

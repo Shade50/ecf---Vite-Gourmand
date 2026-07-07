@@ -60,42 +60,49 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         yield from $this->unwrap()->yieldBlock('title', $context, $blocks);
         yield "</title>
         <link rel=\"icon\" href=\"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>\">
+        <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css\">
         ";
-        // line 7
+        // line 8
         yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
-        // line 9
-        yield "
-        ";
         // line 10
-        yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 13
         yield "
         ";
+        // line 11
+        yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
         // line 14
-        $context["frankenphpHotReload"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 14, $this->source); })()), "request", [], "any", false, false, false, 14), "server", [], "any", false, false, false, 14), "get", ["FRANKENPHP_HOT_RELOAD"], "method", false, false, false, 14);
+        yield "
+        ";
         // line 15
+        $context["frankenphpHotReload"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 15, $this->source); })()), "request", [], "any", false, false, false, 15), "server", [], "any", false, false, false, 15), "get", ["FRANKENPHP_HOT_RELOAD"], "method", false, false, false, 15);
+        // line 16
         yield "        ";
-        if ((($tmp = (isset($context["frankenphpHotReload"]) || array_key_exists("frankenphpHotReload", $context) ? $context["frankenphpHotReload"] : (function () { throw new RuntimeError('Variable "frankenphpHotReload" does not exist.', 15, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 16
+        if ((($tmp = (isset($context["frankenphpHotReload"]) || array_key_exists("frankenphpHotReload", $context) ? $context["frankenphpHotReload"] : (function () { throw new RuntimeError('Variable "frankenphpHotReload" does not exist.', 16, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 17
             yield "        <meta name=\"frankenphp-hot-reload:url\" content=\"";
-            yield (string) $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["frankenphpHotReload"]) || array_key_exists("frankenphpHotReload", $context) ? $context["frankenphpHotReload"] : (function () { throw new RuntimeError('Variable "frankenphpHotReload" does not exist.', 16, $this->source); })()), "html", null, true);
+            yield (string) $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["frankenphpHotReload"]) || array_key_exists("frankenphpHotReload", $context) ? $context["frankenphpHotReload"] : (function () { throw new RuntimeError('Variable "frankenphpHotReload" does not exist.', 17, $this->source); })()), "html", null, true);
             yield "\">
         <script src=\"https://cdn.jsdelivr.net/npm/idiomorph\"></script>
         <script src=\"https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm\" type=\"module\"></script>
         ";
         }
-        // line 20
+        // line 21
         yield "    </head>
     <body>
-        ";
-        // line 22
-        yield from $this->load("components/_navbar.html.twig", 22)->unwrap()->yield($context);
-        // line 23
-        yield "        
+        
         ";
         // line 24
-        yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
+        yield from $this->load("components/_navbar.html.twig", 24)->unwrap()->yield($context);
         // line 25
+        yield "
+        ";
+        // line 26
+        yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
+        // line 27
+        yield "
+        ";
+        // line 28
+        yield from $this->load("components/_footer.html.twig", 28)->unwrap()->yield($context);
+        // line 29
         yield "    </body>
 </html>
 ";
@@ -131,7 +138,7 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         yield from [];
     }
 
-    // line 7
+    // line 8
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -144,7 +151,7 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 8
+        // line 9
         yield "        ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -155,7 +162,7 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         yield from [];
     }
 
-    // line 10
+    // line 11
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -168,10 +175,10 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "javascripts"));
 
-        // line 11
+        // line 12
         yield "            ";
         yield from $this->unwrap()->yieldBlock('importmap', $context, $blocks);
-        // line 12
+        // line 13
         yield "        ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -182,7 +189,7 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         yield from [];
     }
 
-    // line 11
+    // line 12
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -205,7 +212,7 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         yield from [];
     }
 
-    // line 24
+    // line 26
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -248,7 +255,7 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  209 => 24,  186 => 11,  175 => 12,  172 => 11,  159 => 10,  148 => 8,  135 => 7,  112 => 5,  99 => 25,  97 => 24,  94 => 23,  92 => 22,  88 => 20,  80 => 16,  77 => 15,  75 => 14,  72 => 13,  70 => 10,  67 => 9,  65 => 7,  60 => 5,  54 => 1,);
+        return array (  216 => 26,  193 => 12,  182 => 13,  179 => 12,  166 => 11,  155 => 9,  142 => 8,  119 => 5,  106 => 29,  104 => 28,  101 => 27,  99 => 26,  96 => 25,  94 => 24,  89 => 21,  81 => 17,  78 => 16,  76 => 15,  73 => 14,  71 => 11,  68 => 10,  66 => 8,  60 => 5,  54 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -259,6 +266,7 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         <meta charset=\"UTF-8\">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel=\"icon\" href=\"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>\">
+        <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css\">
         {% block stylesheets %}
         {% endblock %}
 
@@ -274,9 +282,12 @@ class __TwigTemplate_8340cd6fb6b8516fbe13177ddb94c714 extends Template
         {% endif %}
     </head>
     <body>
-        {% include \x27components/_navbar.html.twig\x27 %}
         
+        {% include \x27components/_navbar.html.twig\x27 %}
+
         {% block body %}{% endblock %}
+
+        {% include \x27components/_footer.html.twig\x27 %}
     </body>
 </html>
 ", "base.html.twig", "D:\\Pulsecrea\\mes dev purebasic\\ecf - Vite&Gourmand\\vite-gourmand\\templates\\base.html.twig");

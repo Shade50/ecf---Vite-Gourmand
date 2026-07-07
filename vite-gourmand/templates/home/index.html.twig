@@ -3,7 +3,10 @@
 {% block title %}Vite & Gourmand{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
+
+    {% include 'components/_Hero.html.twig' %}
+
+{# <div class="container mt-5">
     <h1 class="mb-4">🍽️ Nos menus</h1>
 
     <div class="row">
@@ -11,5 +14,5 @@
             {% include 'components/_menu_card.html.twig' %}
         {% endfor %}
     </div>
-</div>
+</div> #}
 {% endblock %}

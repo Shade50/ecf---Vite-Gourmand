@@ -98,49 +98,12 @@ class __TwigTemplate_f928323b8c0937bd93f253c8718956a7 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
         // line 6
-        yield "<div class=\"container mt-5\">
-    <h1 class=\"mb-4\">🍽️ Nos menus</h1>
-
-    <div class=\"row\">
-        ";
-        // line 10
-        $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["menus"]) || array_key_exists("menus", $context) ? $context["menus"] : (function () { throw new RuntimeError('Variable "menus" does not exist.', 10, $this->source); })()));
-        $context['loop'] = [
-          'parent' => $context['_parent'],
-          'index0' => 0,
-          'index'  => 1,
-          'first'  => true,
-        ];
-        if (is_array($context['_seq']) || (is_object($context['_seq']) && $context['_seq'] instanceof \Countable)) {
-            $length = count($context['_seq']);
-            $context['loop']['revindex0'] = $length - 1;
-            $context['loop']['revindex'] = $length;
-            $context['loop']['length'] = $length;
-            $context['loop']['last'] = 1 === $length;
-        }
-        foreach ($context['_seq'] as $context["_key"] => $context["menu"]) {
-            // line 11
-            yield "            ";
-            yield from $this->load("components/_menu_card.html.twig", 11)->unwrap()->yield($context);
-            // line 12
-            yield "        ";
-            ++$context['loop']['index0'];
-            ++$context['loop']['index'];
-            $context['loop']['first'] = false;
-            if (isset($context['loop']['revindex0'], $context['loop']['revindex'])) {
-                --$context['loop']['revindex0'];
-                --$context['loop']['revindex'];
-                $context['loop']['last'] = 0 === $context['loop']['revindex0'];
-            }
-        }
-        $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_key'], $context['menu'], $context['_parent'], $context['loop']);
-        $context = array_intersect_key($context, $_parent);
-        $context += $_parent;
-        // line 13
-        yield "    </div>
-</div>
+        yield "
+    ";
+        // line 7
+        yield from $this->load("components/_Hero.html.twig", 7)->unwrap()->yield($context);
+        // line 8
+        yield "
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -172,7 +135,7 @@ class __TwigTemplate_f928323b8c0937bd93f253c8718956a7 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  142 => 13,  127 => 12,  124 => 11,  107 => 10,  101 => 6,  88 => 5,  65 => 3,  42 => 1,);
+        return array (  106 => 8,  104 => 7,  101 => 6,  88 => 5,  65 => 3,  42 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -182,7 +145,10 @@ class __TwigTemplate_f928323b8c0937bd93f253c8718956a7 extends Template
 {% block title %}Vite & Gourmand{% endblock %}
 
 {% block body %}
-<div class=\"container mt-5\">
+
+    {% include \x27components/_Hero.html.twig\x27 %}
+
+{# <div class=\"container mt-5\">
     <h1 class=\"mb-4\">🍽️ Nos menus</h1>
 
     <div class=\"row\">
@@ -190,7 +156,7 @@ class __TwigTemplate_f928323b8c0937bd93f253c8718956a7 extends Template
             {% include \x27components/_menu_card.html.twig\x27 %}
         {% endfor %}
     </div>
-</div>
+</div> #}
 {% endblock %}", "home/index.html.twig", "D:\\Pulsecrea\\mes dev purebasic\\ecf - Vite&Gourmand\\vite-gourmand\\templates\\home\\index.html.twig");
     }
 }

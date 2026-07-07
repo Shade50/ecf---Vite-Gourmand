@@ -1,0 +1,60 @@
+<section class="hero">
+    <div class="container">
+
+        <p class="hero-subtitle fw-bold red-text">
+            FRAIS . FAIT MAISON . LIVRÉ CHEZ VOUS
+        </p>
+
+        <h1 class="hero-title">Bien manger</h1> 
+        <h1 class="hero-script fw-bold">sans perdre de temps</h1>
+        
+        <p>
+            Des plats faits maison, préparés avec des produits frais et de saison,</br>
+            livrés rapidement chez vous.</br>
+            <span class="red-text">Vite & Gourmand</span>, la solution gourmande de votre quotidien !
+        </p>
+        
+        </br>
+        
+        <button class="btn btn-red" onclick="window.location.href='{{ path('app_contact') }}'"><i class="bi bi-bag"></i> Découvrir nos plats</button>
+        <button class="btn btn-classic" onclick="window.location.href='{{ path('app_contact') }}'"><i class="bi bi-journal-text"></i> Voir nos formules</button>
+        
+        <section class="container my-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2>Julie & José, une passion depuis 25 ans</h2>
+                    <hr class="separator">
+
+                    <p>
+                        Installés a <strong class="red-text">Bordeaux</strong> depuis <strong class="red-text">25 ans</strong>, 
+                        <span class="red-text">Julie</span> et <span class="red-text">José</span> 
+                        mettent leur passion de la cuisine au service de leurs clients.
+                    </p>
+                    <p>
+                        Chaque plat est préparé avec des produits frais et de saison,
+                        dans le respect des <strong class="red-text">recettes maison</strong> qui ont fait leur réputation.
+                    </p>
+                    <p>
+                        Aujourd'hui, Vite & Gourmand accompagne les particuliers et professionnels pour leurs repas du quotidien
+                        comme pour leurs événements.
+                    </p>
+                </div>
+                
+            </div>
+        
+        </section>
+
+
+        <div class="container mt-5">
+            <h1 class="mb-4">Nos avis clients</h1>
+
+            <div class="row">
+                {% for avis in avis %}
+                    {% include 'components/_avis_card.html.twig' %}
+                {% endfor %}
+            </div>
+        </div>
+    
+    </div>
+</section>
+

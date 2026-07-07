@@ -1,0 +1,27 @@
+.review-card {
+    border: none;
+    border-radius: 18px;
+    padding: 22px;
+    background: #F4F1DE;
+    box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.08);
+    transition: all 0.25s ease;
+}
+
+.review-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
+}
+
+.review-name {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.review-note {
+    color: #f59e0b;
+    margin: 8px 0;
+}
+
+.review-text {
+    font-weight: 600;
+}
