@@ -1,0 +1,16 @@
+.form-contact {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.btn-color{
+    background-color: #f25c05;
+    border-color: #f25c05;
+    color: #fff;
+}
+.horaires-contact{
+    margin-left: 28px;
+}
