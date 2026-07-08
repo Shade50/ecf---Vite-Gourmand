@@ -3,6 +3,7 @@
 @import "./reviewcard.css";
 @import "./footer.css";
 @import "./contact.css";
+@import "./admin_setting.css";
 
 body {
     background-color: #F9F8F4;

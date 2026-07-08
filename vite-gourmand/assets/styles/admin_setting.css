@@ -1,0 +1,14 @@
+.btn_admin_setting{
+    background-color: #E85D04;
+    border-radius: 10px;
+    color: white;
+    box-shadow:0 8px 15px rgba(0,0,0,.10);
+    box-shadow:8px 8px 20px rgba(249,115,22,.35);
+    margin:40px;    
+}
+.btn_admin_setting:hover{
+    background-color: #E85D04;
+    color: white;
+    transform:translateY(2px);
+    box-shadow:4px 4px 10px rgba(249,115,22,.50);
+}
