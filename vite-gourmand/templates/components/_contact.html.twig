@@ -23,15 +23,15 @@
 			<hr class="separator">
 			<p>
 				<i class="bi bi-phone me-2 red-text"></i>
-				<span class="fw-bold">Téléphone :</span> 01 23 45 67 89
+				<span class="fw-bold">Téléphone :</span> {{site_settings().Phone}}
 			</p>
 			<p>
 				<i class="bi bi-envelope me-2 red-text"></i>
-				<span class="fw-bold">Email :</span> contact@viteetgourmand.fr
+				<span class="fw-bold">Email :</span> {{site_settings().Email}}
 			</p>
 			<p>
 				<i class="bi bi-geo-alt me-2 red-text"></i>
-				<span class="fw-bold">Adresse :</span> 123 Rue de la Paix, 33000 Bordeaux
+				<span class="fw-bold">Adresse :</span> {{site_settings().Address}}, {{site_settings().PostalCode}} {{site_settings().City}}
 			</p>
 			<p>
 				<i class="bi bi-clock me-2 red-text"></i>
@@ -40,12 +40,12 @@
                 <div class="horaires-contact">
                     <p>				 
 				    <span class="fw-bold">Lundi au vendredi :</span></br>
-                    08:00 - 12:00 et 13:00 - 19:00
+                    {{site_settings().OpeningHoursWeekdays}}
 				<br>
 				    <span class="fw-bold">Samedi :</span> </br>
-                    08:00 - 13:00
+                    {{site_settings().OpeningHoursSaturday}}
 				<br>
-				    <span class="fw-bold">Dimanche :</span> Fermé
+				    <span class="fw-bold">Dimanche :</span> {{site_settings().OpeningHoursSunday}}
                 </p>
                 </div>
                 

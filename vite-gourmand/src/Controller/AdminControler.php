@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\SiteSettingsRepository;
 use App\Entity\SiteSettings;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,9 +13,10 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdminControler extends AbstractController
 {
     #[Route('/admin', name: 'app_admin')]
-    public function index(): Response
+    public function index(SiteSettingsRepository $SiteSettingsRepository): Response
     {
-        return $this->render('admin/index.html.twig', [
+        $settings = $SiteSettingsRepository->findOneBy([]);
+        return $this->render('admin/index.html.twig', ['settings' =>$settings,
             'controller_name' => 'AdminControler',
         ]);
     }

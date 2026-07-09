@@ -63,13 +63,7 @@ final class HomeController extends AbstractController
 
     ]
 
-]);
-    }
+        ]);
 
-    #[Route('/test2', name: 'app_test2')]
-    public function test2(): Response
-    {
-        return new Response('<h1>Bienvenue sur la page de test numero2 !</h1>');
     }
 }
-
