@@ -14,12 +14,15 @@ class AllergeneType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('label')
+            ->add('label', null, [
+                'label' => 'Nom del\'allergène',
+            ])
             ->add('description')
             ->add('plats', EntityType::class, [
                 'class' => Plat::class,
-                'choice_label' => 'id',
+                'choice_label' => 'title',
                 'multiple' => true,
+
             ])
         ;
     }

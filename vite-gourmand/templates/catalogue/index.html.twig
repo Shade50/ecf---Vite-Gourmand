@@ -8,34 +8,55 @@
     <h1 class="text-center mb-4">Gestion du catalogue</h1>
 
     <div class="row g-4">
-        <div class="col-md-6">
-            <div class="card p-4 h-100">
+        <div class="col-md-4">
+            <div class="card p-4 h-80 ">
 
-                <h2>Nouvelle allergène</h2>
+                <h2 class="text-center">Nouvelle allergène</h2>
 
                 {{ form_start(allergeneForm) }}
-                    {{ form_widget(allergeneForm) }}
-                    <div class="text-center">
-                        <button class="btn btn_admin_setting btn_admin_menu">Enregistrer</button>
+
+                    <div class="container py-5">
+                        <div class="col-md-12">
+
+                            {{ form_row(allergeneForm.label) }}
+                            {{ form_row(allergeneForm.description) }}
+                            {{ form_row(allergeneForm.plats) }}
+                
+                            <div class="text-center">
+                                <button class="btn btn_admin_setting btn_admin_menu">Enregistrer</button>
+                                <a href="{{ path('app_allergene_index')}}" class="mt-1 btn btn_admin_setting btn_admin_menu">Voir la liste</a>
+                            </div>
+                        </div>
                     </div>
                 {{ form_end(allergeneForm)}}
 
-                <a href="{{ path('app_allergene_index')}}" class="mt-3">Voir la liste</a>
+                
 
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card p-4 h-100">
 
                 <h2>Créer un thème</h2>
 
                 {{ form_start(themeForm) }}
-                    {{ form_widget(themeForm) }}
-                    <button class="btn btn_admin_setting mt-3">Enregistrer</button>
+
+                    <div class="container py-5">
+                        <div class="col-md-12">
+                            {{ form_row(themeForm.label) }}
+                            {{ form_row(themeForm.description) }}
+
+                            <div class="text-center">
+                                <button class="btn btn_admin_setting mt-3">Enregistrer</button>
+                                </br>
+                                <a href="{{ path('app_theme_index')}}" class="mt-3">Voir la liste</a>
+                            </div>
+                        </div>
+                    </div>
                 {{ form_end(themeForm)}}
 
-                <a href="{{ path('app_theme_index')}}" class="mt-3">Voir la liste</a>
+                
 
             </div>
         </div>
