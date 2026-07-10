@@ -1,98 +1,114 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion du catalogue{% endblock %}
+{% block title %}Gestion du catalogue
+{% endblock %}
 
 {% block body %}
 
-<div class="container py-5">
-    <h1 class="text-center mb-4">Gestion du catalogue</h1>
+	<div class="container py-5">
+		<h1 class="text-center mb-4">Gestion du catalogue</h1>
+		<div class="row g-4">
+			<div
+				class="accordion" id="catalogueAccordion">
 
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card p-4 h-80 ">
+				{# Formulaire pour aajout allergene #}
 
-                <h2 class="text-center">Nouvelle allergène</h2>
+				<div class="accordion-item mb-5">
+					<h2 class="accordion-header" id="headingAllergene">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAllergene" aria-expanded="true" aria-controls="collapseAllergene">
+							Ajouter un Nouvel allergène
+						</button>
+					</h2>
 
-                {{ form_start(allergeneForm) }}
+					<div id="collapseAllergene" class="accordion-collapse collapse show" aria-labelledby="headingAllergene" data-bs-parent="#catalogueAccordion">
+						<div class="accordion-body">
+							<h2 class="text-center">Ajouter un nouvel allergène</h2>
+							{{ form_start(allergeneForm) }}
 
-                    <div class="container py-5">
-                        <div class="col-md-12">
+							{{ form_widget(allergeneForm) }}
+							<div class="d-flex justify-content-center mt-1 gap-3">
+								<button class="btn btn_admin_setting btn_admin_menu">Enregistrer</button>
+								<a href="{{ path('app_allergene_index')}}" class="btn btn_admin_setting btn_admin_menu">Voir la liste</a>
+							</div>
 
-                            {{ form_row(allergeneForm.label) }}
-                            {{ form_row(allergeneForm.description) }}
-                            {{ form_row(allergeneForm.plats) }}
-                
-                            <div class="text-center">
-                                <button class="btn btn_admin_setting btn_admin_menu">Enregistrer</button>
-                                <a href="{{ path('app_allergene_index')}}" class="mt-1 btn btn_admin_setting btn_admin_menu">Voir la liste</a>
-                            </div>
-                        </div>
-                    </div>
-                {{ form_end(allergeneForm)}}
+							{{ form_end(allergeneForm)}}
+						</div>
+					</div>
+				</div>
 
-                
+				{# formulaire pour ajout de nouveau thme  #}
 
-            </div>
-        </div>
+				<div class="accordion-item mb-5">
+					<h2 class="accordion-header" id="headingTheme">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTheme" aria-expanded="true" aria-controls="collapseTheme">
+							Ajouter un nouveau thème
+						</h2>
 
-        <div class="col-md-4">
-            <div class="card p-4 h-100">
+						<div id="collapseTheme" class="accordion-collapse collapse show" aria-labelledby="headingTheme" data-bs-parent="#catalogueAccordion">
+							<div class="accordion-body">
+								<h2 class="text-center">Ajouter un nouveau thème</h2>
+								{{ form_start(themeForm) }}
 
-                <h2>Créer un thème</h2>
+								{{ form_widget(themeForm) }}
+								<div class="d-flex justify-content-center mt-1 gap-3">
+									<button class="btn btn_admin_setting btn_admin_menu">Enregistrer</button>
+									<a href="{{ path('app_theme_index')}}" class="btn btn_admin_setting btn_admin_menu">Voir la liste</a>
+								</div>
 
-                {{ form_start(themeForm) }}
+								{{ form_end(themeForm)}}
+							</div>
+						</div>
+					</div>
+					{# formulaire pour créer un nouveau plat #}
 
-                    <div class="container py-5">
-                        <div class="col-md-12">
-                            {{ form_row(themeForm.label) }}
-                            {{ form_row(themeForm.description) }}
+					<div class="accordion-item mb-5">
+						<h2 class="accordion-header" id="headingPlat">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlat" aria-expanded="true" aria-controls="collapseplat">
+								Créer un nouveau plat
+							</h2>
 
-                            <div class="text-center">
-                                <button class="btn btn_admin_setting mt-3">Enregistrer</button>
-                                </br>
-                                <a href="{{ path('app_theme_index')}}" class="mt-3">Voir la liste</a>
-                            </div>
-                        </div>
-                    </div>
-                {{ form_end(themeForm)}}
+							<div id="collapsePlat" class="accordion-collapse collapse show" aria-labelledby="headingPlat" data-bs-parent="#catalogueAccordion">
+								<div class="accordion-body">
+									<h2 class="text-center">Ajouter un nouveau plat</h2>
+									{{ form_start(platForm) }}
 
-                
+									{{ form_widget(platForm) }}
+									<div class="d-flex justify-content-center mt-1 gap-3">
+										<button class="btn btn_admin_setting btn_admin_menu">Enregistrer</button>
+										<a href="{{ path('app_plat_index')}}" class="btn btn_admin_setting btn_admin_menu">Voir la liste</a>
+									</div>
 
-            </div>
-        </div>
+									{{ form_end(platForm)}}
+								</div>
+							</div>
+						</div>
 
-        <div class="col-md-6">
-            <div class="card p-4 h-100">
+						{# formulaire de creation de nouveau menu #}
 
-                <h2>Créer un plat</h2>
+						<div class="accordion-item mb-5">
+							<h2 class="accordion-header" id="headingMenu">
+								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenu" aria-expanded="true" aria-controls="collapseMenu">
+									Ajouter un Nouveau menu
+								</button>
+							</h2>
 
-                {{ form_start(platForm) }}
-                    {{ form_widget(platForm) }}
-                    <button class="btn btn_admin_setting mt-3">Enregistrer</button>
-                {{ form_end(platForm)}}
+							<div id="collapseMenu" class="accordion-collapse collapse show" aria-labelledby="headingMenu" data-bs-parent="#catalogueAccordion">
+								<div class="accordion-body">
+									<h2 class="text-center">Créer un menu</h2>
+									{{ form_start(menuForm) }}
 
-                <a href="{{ path('app_plat_index')}}" class="mt-3">Voir la liste</a>
+									{{ form_widget(menuForm) }}
+									<div class="d-flex justify-content-center mt-1 gap-3">
+										<button class="btn btn_admin_setting btn_admin_menu">Enregistrer</button>
+										<a href="{{ path('app_menu_index')}}" class="btn btn_admin_setting btn_admin_menu">Voir la liste</a>
+									</div>
+									{{ form_end(menuForm)}}
+								</div>
+							</div>
 
-            </div>
-        </div>
+						</div>
+					</div>
 
-        <div class="col-md-6">
-            <div class="card p-4 h-100">
 
-                <h2>Créer un menu</h2>
-
-                {{ form_start(menuForm) }}
-                    {{ form_widget(menuForm) }}
-                    <button class="btn btn_admin_setting mt-3">Enregistrer</button>
-                {{ form_end(menuForm)}}
-
-                <a href="{{ path('app_menu_index')}}" class="mt-3">Voir la liste</a>
-
-            </div>
-        </div>
-
-    </div>
-
-</div>
-
-{% endblock %}
+				</div>
+			{% endblock %}

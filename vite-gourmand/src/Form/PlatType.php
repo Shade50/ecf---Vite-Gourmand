@@ -15,7 +15,9 @@ class PlatType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
+            ->add('title',null,[
+                'label' => 'Nom du plat',
+            ])
             ->add('description')
             ->add('type')
             ->add('regime')
@@ -23,14 +25,12 @@ class PlatType extends AbstractType
                 'class' => Allergene::class,
                 'choice_label' => 'label',
                 'multiple' => true,
-                'expanded' => true,
                 'required' => false,
             ])
             ->add('menus', EntityType::class, [
                 'class' => Menu::class,
                 'choice_label' => 'title',
                 'multiple' => true,
-                'expanded' => true,
                 'required' => false
             ])
         ;

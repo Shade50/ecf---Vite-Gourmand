@@ -15,10 +15,16 @@ class MenuType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
+            ->add('title',null, [
+                'label' => 'Nom du menu',
+            ])
             ->add('description')
-            ->add('minimumPerson')
-            ->add('price')
+            ->add('minimumPerson',null,[
+                'label' => 'Personne minimum',
+            ])
+            ->add('price',null,[
+                'label' => 'Prix'
+            ])
             ->add('conditions')
             ->add('stock')
             ->add('image')
@@ -31,7 +37,7 @@ class MenuType extends AbstractType
                 'class' => Plat::class,
                 'choice_label' => 'title',
                 'multiple' => true,
-                'expanded' => true,
+
             ])
         ;
     }

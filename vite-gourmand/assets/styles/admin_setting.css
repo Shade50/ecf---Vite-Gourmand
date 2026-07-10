@@ -4,7 +4,7 @@
     color: white;
     box-shadow:0 8px 15px rgba(0,0,0,.10);
     box-shadow:8px 8px 20px rgba(249,115,22,.35);
-    margin:40px;    
+    /* margin:40px;     */
 }
 .btn_admin_setting:hover{
     background-color: #E85D04;
@@ -13,5 +13,9 @@
     box-shadow:4px 4px 10px rgba(249,115,22,.50);
 }
 .btn_admin_menu{
-    width: 50%;
+    width: 150px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
