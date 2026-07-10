@@ -19,3 +19,21 @@
     align-items: center;
     justify-content: center;
 }
+
+/* css de la parti gestion du catalogue */
+.accordion-button,
+.accordion-button.collapsed {
+    background-color: #FFF4E9;
+    color: #E85D04;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #FFF4E9;
+    color: #E85D04;
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: #E85D04;
+}

@@ -6,6 +6,7 @@
 {% block body %}
 
 	<div class="container py-5">
+    <a href="{{ path('app_admin')}}" class="btn btn_admin_setting btn_admin_menu">Retour</a>
 		<h1 class="text-center mb-4">Gestion du catalogue</h1>
 		<div class="row g-4">
 			<div
@@ -15,14 +16,14 @@
 
 				<div class="accordion-item mb-5">
 					<h2 class="accordion-header" id="headingAllergene">
-						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAllergene" aria-expanded="true" aria-controls="collapseAllergene">
-							Ajouter un Nouvel allergène
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAllergene" aria-expanded="false" aria-controls="collapseAllergene">
+							<strong>Ajouter un Nouvel allergène</strong>
 						</button>
 					</h2>
 
-					<div id="collapseAllergene" class="accordion-collapse collapse show" aria-labelledby="headingAllergene" data-bs-parent="#catalogueAccordion">
+					<div id="collapseAllergene" class="accordion-collapse collapse " aria-labelledby="headingAllergene" data-bs-parent="#catalogueAccordion">
 						<div class="accordion-body">
-							<h2 class="text-center">Ajouter un nouvel allergène</h2>
+							<h2 class="text-center red-text">Ajouter un nouvel allergène</h2>
 							{{ form_start(allergeneForm) }}
 
 							{{ form_widget(allergeneForm) }}
@@ -40,13 +41,13 @@
 
 				<div class="accordion-item mb-5">
 					<h2 class="accordion-header" id="headingTheme">
-						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTheme" aria-expanded="true" aria-controls="collapseTheme">
-							Ajouter un nouveau thème
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTheme" aria-expanded="false" aria-controls="collapseTheme">
+							<strong>Ajouter un nouveau thème</strong>
 						</h2>
 
-						<div id="collapseTheme" class="accordion-collapse collapse show" aria-labelledby="headingTheme" data-bs-parent="#catalogueAccordion">
+						<div id="collapseTheme" class="accordion-collapse collapse" aria-labelledby="headingTheme" data-bs-parent="#catalogueAccordion">
 							<div class="accordion-body">
-								<h2 class="text-center">Ajouter un nouveau thème</h2>
+								<h2 class="text-center red-text">Ajouter un nouveau thème</h2>
 								{{ form_start(themeForm) }}
 
 								{{ form_widget(themeForm) }}
@@ -63,13 +64,13 @@
 
 					<div class="accordion-item mb-5">
 						<h2 class="accordion-header" id="headingPlat">
-							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlat" aria-expanded="true" aria-controls="collapseplat">
-								Créer un nouveau plat
+							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlat" aria-expanded="false" aria-controls="collapseplat">
+								<strong>Créer un nouveau plat</strong>
 							</h2>
 
-							<div id="collapsePlat" class="accordion-collapse collapse show" aria-labelledby="headingPlat" data-bs-parent="#catalogueAccordion">
+							<div id="collapsePlat" class="accordion-collapse collapse" aria-labelledby="headingPlat" data-bs-parent="#catalogueAccordion">
 								<div class="accordion-body">
-									<h2 class="text-center">Ajouter un nouveau plat</h2>
+									<h2 class="text-center red-text">Ajouter un nouveau plat</h2>
 									{{ form_start(platForm) }}
 
 									{{ form_widget(platForm) }}
@@ -87,14 +88,14 @@
 
 						<div class="accordion-item mb-5">
 							<h2 class="accordion-header" id="headingMenu">
-								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenu" aria-expanded="true" aria-controls="collapseMenu">
-									Ajouter un Nouveau menu
+								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenu" aria-expanded="false" aria-controls="collapseMenu">
+									<strong>Ajouter un Nouveau menu</strong>
 								</button>
 							</h2>
 
-							<div id="collapseMenu" class="accordion-collapse collapse show" aria-labelledby="headingMenu" data-bs-parent="#catalogueAccordion">
+							<div id="collapseMenu" class="accordion-collapse collapse" aria-labelledby="headingMenu" data-bs-parent="#catalogueAccordion">
 								<div class="accordion-body">
-									<h2 class="text-center">Créer un menu</h2>
+									<h2 class="text-center red-text">Créer un menu</h2>
 									{{ form_start(menuForm) }}
 
 									{{ form_widget(menuForm) }}
