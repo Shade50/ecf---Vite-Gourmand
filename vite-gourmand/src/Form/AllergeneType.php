@@ -22,6 +22,7 @@ class AllergeneType extends AbstractType
                 'class' => Plat::class,
                 'choice_label' => 'title',
                 'multiple' => true,
+                'required' => false,
 
             ])
         ;
