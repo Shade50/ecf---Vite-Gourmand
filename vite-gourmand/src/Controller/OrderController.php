@@ -34,19 +34,41 @@ final class OrderController extends AbstractController
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $order->setTotalPrice((string) $menu->getPrice());
+if ($form->isSubmitted() && $form->isValid()) {
+    $numberOfPeople = $order->getNumberOfPeople();
+    $minimumPerson = $menu->getMinimumPerson();
 
-            $entityManager->persist($order);
-            $entityManager->flush();
+    if ($numberOfPeople < $minimumPerson) {
+        $this->addFlash(
+            'danger',
+            sprintf(
+                'Ce menu nécessite un minimum de %d personnes.',
+                $minimumPerson
+            )
+        );
 
-            $this->addFlash(
-                'success',
-                'Votre commande a bien été enregistrée.'
-            );
+        return $this->render('order/create.html.twig', [
+            'form' => $form,
+            'menu' => $menu,
+        ]);
+    }
 
-            return $this->redirectToRoute('app_home');
-        }
+    $totalPrice = (float) $menu->getPrice() * $numberOfPeople;
+
+    $order->setTotalPrice(
+        number_format($totalPrice, 2, '.', '')
+    );
+
+    $entityManager->persist($order);
+    $entityManager->flush();
+
+    $this->addFlash(
+        'success',
+        'Votre commande a bien été enregistrée.'
+    );
+
+    return $this->redirectToRoute('app_home');
+}
 
         return $this->render('order/create.html.twig', [
             'form' => $form,
