@@ -2,11 +2,11 @@
 
 namespace App\Form;
 
-use App\Entity\Menu;
 use App\Entity\Order;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,23 +15,15 @@ class OrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('status')
-            ->add('createAt', null, [
-                'widget' => 'single_text'
+            ->add('deliveryDate', DateTimeType::class, [
+                'widget' => 'single_text',
+                'label' => 'Date et heure de livraison',
             ])
-            ->add('totalPrice')
-            ->add('deliveryDate', null, [
-                'widget' => 'single_text'
+            ->add('numberOfPeople', IntegerType::class, [
+                'label' => 'Nombre de personnes',
             ])
-            ->add('numberOfPeople')
-            ->add('deliveryAdresse')
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
-            ->add('menu', EntityType::class, [
-                'class' => Menu::class,
-                'choice_label' => 'id',
+            ->add('deliveryAddress', TextType::class, [
+                'label' => 'Adresse de livraison',
             ])
         ;
     }
@@ -42,4 +34,4 @@ class OrderType extends AbstractType
             'data_class' => Order::class,
         ]);
     }
-}
+} 
