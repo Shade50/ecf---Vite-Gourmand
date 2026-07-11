@@ -3,12 +3,26 @@
 {% block title %}Commander {{ menu.title }}{% endblock %}
 
 {% block body %}
+{% for message in app.flashes('danger') %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+{% endfor %}
 <p>
-    Prix par personne : <strong>{{ menu.price }} €</strong>
+    Prix du menu :
+    <strong>{{ menu.price }} €</strong>
+    pour {{ menu.minimumPerson }} personnes minimum
 </p>
 
 <p>
-    Total : <strong><span id="total-price">{{ menu.price }}</span> €</strong>
+    Total :
+    <strong>
+        <span id="total-price">{{ menu.price }}</span> €
+    </strong>
+</p>
+
+<p id="discount-message" class="text-success d-none">
+    Réduction de 10 % appliquée
 </p>
 
 {{ form_start(form) }}
@@ -27,16 +41,38 @@
     );
 
     const totalPrice = document.getElementById('total-price');
-    const unitPrice = {{ menu.price|json_encode|raw }};
+    const discountMessage = document.getElementById('discount-message');
+
+    const menuPrice = parseFloat(
+        {{ menu.price|json_encode|raw }}
+    );
+
+    const minimumPerson = {{ menu.minimumPerson }};
 
     function updateTotal() {
         const people = parseInt(numberOfPeople.value) || 0;
-        const total = parseFloat(unitPrice) * people;
+
+        if (people < minimumPerson) {
+            totalPrice.textContent = menuPrice.toFixed(2);
+            discountMessage.classList.add('d-none');
+            return;
+        }
+
+        const pricePerPerson = menuPrice / minimumPerson;
+        let total = pricePerPerson * people;
+
+        if (people >= minimumPerson + 5) {
+            total *= 0.90;
+            discountMessage.classList.remove('d-none');
+        } else {
+            discountMessage.classList.add('d-none');
+        }
 
         totalPrice.textContent = total.toFixed(2);
     }
 
     numberOfPeople.addEventListener('input', updateTotal);
+
     updateTotal();
 </script>
 {% endblock %}

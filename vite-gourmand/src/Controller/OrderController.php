@@ -34,41 +34,39 @@ final class OrderController extends AbstractController
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
 
-if ($form->isSubmitted() && $form->isValid()) {
-    $numberOfPeople = $order->getNumberOfPeople();
-    $minimumPerson = $menu->getMinimumPerson();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $numberOfPeople = $order->getNumberOfPeople();
+            $minimumPerson = $menu->getMinimumPerson();
+            $menuPrice = (float) $menu->getPrice();
 
-    if ($numberOfPeople < $minimumPerson) {
-        $this->addFlash(
-            'danger',
-            sprintf(
-                'Ce menu nécessite un minimum de %d personnes.',
-                $minimumPerson
-            )
-        );
-
-        return $this->render('order/create.html.twig', [
-            'form' => $form,
-            'menu' => $menu,
-        ]);
-    }
-
-    $totalPrice = (float) $menu->getPrice() * $numberOfPeople;
-
-    $order->setTotalPrice(
-        number_format($totalPrice, 2, '.', '')
-    );
-
-    $entityManager->persist($order);
-    $entityManager->flush();
-
+            if ($numberOfPeople < $minimumPerson) {
     $this->addFlash(
-        'success',
-        'Votre commande a bien été enregistrée.'
+        'danger',
+        sprintf(
+            'Ce menu nécessite un minimum de %d personnes.',
+            $minimumPerson
+        )
     );
 
-    return $this->redirectToRoute('app_home');
+    return $this->redirectToRoute('app_order_create', [
+        'id' => $menu->getId(),
+    ]);
 }
+
+            $pricePerPerson = $menuPrice / $minimumPerson;
+            $totalPrice = $pricePerPerson * $numberOfPeople;
+
+            // Réduction de 10 % à partir de 5 personnes supplémentaires
+            if ($numberOfPeople >= $minimumPerson + 5) {
+                $totalPrice *= 0.90;
+            }
+
+            $order->setTotalPrice(
+                number_format($totalPrice, 2, '.', '')
+            );
+
+            return $this->redirectToRoute('app_home');
+        }
 
         return $this->render('order/create.html.twig', [
             'form' => $form,
