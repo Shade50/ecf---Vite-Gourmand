@@ -22,7 +22,7 @@ class OrderType extends AbstractType
             ->add('numberOfPeople', IntegerType::class, [
                 'label' => 'Nombre de personnes',
             ])
-            ->add('deliveryAddress', TextType::class, [
+            ->add('deliveryAdresse', TextType::class, [
                 'label' => 'Adresse de livraison',
             ])
         ;

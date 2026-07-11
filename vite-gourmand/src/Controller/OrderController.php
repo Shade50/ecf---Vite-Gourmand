@@ -29,7 +29,7 @@ final class OrderController extends AbstractController
         $order->setUser($user);
         $order->setMenu($menu);
         $order->setStatus('En attente');
-        $order->setCreatedAt(new \DateTimeImmutable());
+        $order->setCreateAt(new \DateTimeImmutable());
 
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
