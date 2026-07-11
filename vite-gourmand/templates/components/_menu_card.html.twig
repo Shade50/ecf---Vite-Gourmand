@@ -1,9 +1,13 @@
 <div class="col-md-3 mb-4">
-    <div class="card h-100 shadow-sm">
-        <div class="card-body">
-            <h3 class="h5">{{ menu.titre }}</h3>
-            <p>{{ menu.description }}</p>
-            <strong>{{ menu.prix }} €</strong>
-        </div>
-    </div>
+	<div class="card h-100 shadow-sm">
+		<div class="card-body">
+			<h3 class="h5">{{ menu.titre }}</h3>
+			<p>{{ menu.description }}</p>
+			<strong>{{ menu.prix }}
+				€</strong>
+			<a href="{{ path('app_order_create', { id: menu.id }) }}" class="btn btn-primary">
+				Commander
+			</a>
+		</div>
+	</div>
 </div>

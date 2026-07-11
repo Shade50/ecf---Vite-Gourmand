@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commander {{ menu.title }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <h1>Commander {{ menu.title }}</h1>
+
+    <p>
+        Prix : {{ menu.price }} €
+        <br>
+        Minimum : {{ menu.minimumPerson }} personnes
+    </p>
+
+    {{ form_start(form) }}
+        {{ form_row(form.deliveryDate) }}
+        {{ form_row(form.numberOfPeople) }}
+        {{ form_row(form.deliveryAddress) }}
+
+        <button type="submit" class="btn btn-primary">
+            Valider la commande
+        </button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
