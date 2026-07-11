@@ -13,19 +13,30 @@
 					<li class="nav-item">
 						<a class="nav-link" href="#">Menus</a>
 					</li>
-					<li class="nav-item">
-						{# <a class="nav-link" href="{{ path('app_login') }}">Connection</a> #}
-						{% if app.user %}
 
-							<span>Bonjour {{ app.user.prenom }}</span>
-							<a class="nav-link" href="{{ path('app_logout' )}}">Déconnexion</a>
-						{% else %}
-							<a class="nav-link" href="{{ path('app_login')}}">Connexion</a>
-						{% endif %}
-					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_contact') }}">Contact</a>
 					</li>
+
+					<li class="nav-item">
+						{# <a class="nav-link" href="{{ path('app_login') }}">Connection</a> #}
+						{% if app.user %}
+							<div class="d-flex align-items-center gap-3">
+								
+								{% if is_granted('ROLE_ADMIN') %}
+									<a href="{{ path('app_admin') }}" class="nav-link">Administration</a>	
+								{% endif %}
+								<a href="{{ path('app_logout') }}" class="nav-link">Déconnexion</a>
+								<span>Bonjour {{ app.user.prenom }}</span>
+								
+							</div>
+						{% else %}
+							<a class="nav-link" href="{{ path('app_login')}}">Connexion</a>
+						{% endif %}
+
+
+					</li>
+					
 				</ul>
 			</div>
 		</div>
