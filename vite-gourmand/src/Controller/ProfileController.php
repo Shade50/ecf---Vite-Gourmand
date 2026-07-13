@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
 use App\Entity\User;
 use App\Form\ProfileType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+
 
 
 
@@ -54,5 +56,24 @@ final class ProfileController extends AbstractController
 
         ]);
     }
+    #[route('/profil/commande/{id}',
+        name: 'app_profile_order_detail',
+        requirements:['id' => '\d+'],
+        methods: ['get'])]
+        public function orderDetail(order $order): Response
+        {
+            $this->denyAccessUnlessGranted('ROLE_USER');
 
+            /** @var User $user */
+            $user = $this->getUser();
+
+            if ($order->getUser() != $user){
+                throw $this->createAccessDeniedException(
+                    'Vous ne pouvez pas consulter cette commande.');
+            }
+        
+            return $this->render('profile/order_detail.html.twig',[
+                'order' => $order,
+                ]);
+        }
 }
