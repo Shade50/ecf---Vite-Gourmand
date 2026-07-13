@@ -16,15 +16,29 @@
                         <p>{{ menu.description }}</p>
 
                         <p>
-                            <strong>{{ menu.price }} €</strong>
-                            <br>
-                            Minimum : {{ menu.minimumPerson }} personnes
-                        </p>
+    <strong>{{ menu.price }} €</strong>
+    <br>
+    Minimum : {{ menu.minimumPerson }} personnes
+</p>
 
-                        <a href="{{ path('app_order_create', { id: menu.id }) }}"
-                           class="btn btn-primary">
-                            Commander
-                        </a>
+{% if menu.stock > 0 %}
+    <p class="text-success">
+        Stock disponible : {{ menu.stock }} commande(s)
+    </p>
+
+    <a href="{{ path('app_order_create', { id: menu.id }) }}"
+       class="btn btn-primary">
+        Commander
+    </a>
+{% else %}
+    <p class="text-danger fw-bold">
+        Rupture de stock
+    </p>
+
+    <button class="btn btn-secondary" disabled>
+        Commander
+    </button>
+{% endif %}
                     </div>
                 </div>
             </div>
