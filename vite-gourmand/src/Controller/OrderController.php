@@ -22,6 +22,15 @@ final class OrderController extends AbstractController
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
+        /** verification du stock */
+        if ($menu->getStock() <=0){
+            $this->addFlash(
+                'danger',
+                'Ce menu est actuellement en rupture de stock.'
+            );
+            return $this->redirectToRoute('app_menu_public');
+        }
+
         /** @var User $user */
         $user = $this->getUser();
 
@@ -64,6 +73,10 @@ final class OrderController extends AbstractController
             $order->setTotalPrice(
                 number_format($totalPrice, 2, '.', '')
             );
+
+            // Une commande validé consomme une unité de stock
+            $menu->setStock($menu->getStock()-1);
+
             $entityManager->persist($order);
             $entityManager->flush();
 
