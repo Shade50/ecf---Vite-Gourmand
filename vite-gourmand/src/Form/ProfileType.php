@@ -4,8 +4,16 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
+
+
+
+
 
 class ProfileType extends AbstractType
 {
@@ -17,7 +25,30 @@ class ProfileType extends AbstractType
             ->add('prenom')
             ->add('gsm')
             ->add('adressePostale')
-        
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'mapped' => false,
+                'required' => false,
+                'invalid_message' => 'Les mots de passe ne correspondent pas.',
+                'first_options' => [
+                    'label' => 'Nouveau mot de passe',
+                ],
+                'second_options' => [
+                    'label' => 'Confirmer le nouveau mot de passe',
+                ],
+                'constraints' => [
+                    new Length(
+                        min: 10,
+                        minMessage: 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
+                        max: 4096,
+                    ),
+                    new Regex(
+                        pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/',
+                        message: 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.',
+                    ),
+                ],
+            ])
+
         ;
     }
 
