@@ -27,43 +27,30 @@
 			<table class="table table-striped align-middle">
 				<thead>
 					<tr>
-<<<<<<< HEAD
-                        <th>n° commande</th>
-=======
->>>>>>> cf0162e ((feature))
                         <th>n° commande</th>
 						<th>Menu</th>
 						<th>Date de livraison</th>
 						<th>Personnes</th>
 						<th>Prix total</th>
 						<th>Status</th>
-<<<<<<< HEAD
 						<th>Action</th>
-=======
->>>>>>> cf0162e ((feature))
 					</tr>
 				</thead>
 				<tbody>
 					{% for order in orders %}
 						<tr>
-<<<<<<< HEAD
                             <td>{{ order.id}}
-=======
->>>>>>> cf0162e ((feature))
 							<td>{{ order.menu.title }}</td>
 							<td>{{ order.deliveryDate|date('d/m/y à H:i') }}</td>
 							<td>{{ order.numberOfPeople }}</td>
 							<td>{{ order.totalPrice|number_format(2, ',', ' ') }}
 								€</td>
 							<td>{{ order.status }}</td>
-<<<<<<< HEAD
 							<td>
 								<a href="{{ path('app_profile_order_detail', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary">
 									Voir le détail
 								</a>
 							</td>
-=======
->>>>>>> cf0162e ((feature))
 						</tr>
 					{% endfor %}
 				</tbody>
