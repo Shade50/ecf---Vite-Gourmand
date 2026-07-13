@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des commandes{% endblock %}
+
+{% block body %}
+
+    <div class="container py-5">
+    <h1 class="mb-4">Mes commandes</h1>
+
+    {% if orders is empty %}
+        <div class="alert alert-info">
+            Vous n'avez encore passé aucune commande.
+        </div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Date de livraison</th>
+                        <th>Nombre de personnes</th>
+                        <th>Prix total</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.menu.title }}</td>
+                            <td>{{ order.deliveryDate|date('d/m/Y à H:i') }}</td>
+                            <td>{{ order.numberOfPeople }}</td>
+                            <td>{{ order.totalPrice|number_format(2, ',', ' ') }} €</td>
+                            <td>{{ order.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

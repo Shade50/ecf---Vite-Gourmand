@@ -8,6 +8,34 @@
         {{ message }}
     </div>
 {% endfor %}
+{# 
+debut card mes infos #}
+
+    <div class="mb-4">
+
+        <h2 class="h4">Vos informations</h2>
+
+        <p class="mb-1">
+            <strong>Nom: </strong> {{app.user.nom}}
+        </p>
+
+        <p class="mb-1">
+            <strong>Prénom: </strong> {{app.user.prenom}}
+        </p>
+
+        <p class="mb-1">
+            <strong>Email: </strong> {{app.user.email}}
+        </p>
+
+        <p class="mb-1">
+            <strong>Télèphone: </strong> {{app.user.gsm}}
+        </p>
+
+    </div>
+
+{# fin de card mes infos #}
+
+{# debut card ma commande #}
 <p>
     Prix du menu :
     <strong>{{ menu.price }} €</strong>
@@ -35,6 +63,7 @@
     </button>
 {{ form_end(form) }}
 
+{# fin de la card mes commande #}
 <script>
     const numberOfPeople = document.getElementById(
         '{{ form.numberOfPeople.vars.id }}'

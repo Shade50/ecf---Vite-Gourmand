@@ -64,8 +64,10 @@ final class OrderController extends AbstractController
             $order->setTotalPrice(
                 number_format($totalPrice, 2, '.', '')
             );
+            $entityManager->persist($order);
+            $entityManager->flush();
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_order_history');
         }
 
         return $this->render('order/create.html.twig', [
@@ -73,4 +75,18 @@ final class OrderController extends AbstractController
             'menu' => $menu,
         ]);
     }
+
+    #[Route('/mes-commandes', name: 'app_order_history',methods:['get'])]
+    public function history(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return $this->render('order/history.html.twig',[
+            'orders' => $user->getOrders(),
+        ]);
+    }
+
 }
