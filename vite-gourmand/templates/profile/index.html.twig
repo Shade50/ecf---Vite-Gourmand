@@ -1,17 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon profil{% endblock %}
+{% block title %}Mon profil
+{% endblock %}
 
 {% block body %}
 
-    <h1>Mon profil</h1>
+	<h1>Mon profil</h1>
 
-    {{ form_start(form)}}
+	{{ form_start(form)}}
 
-        {{ form_widget(form) }}
-        
-        <button type="submit" class="btn btn-primary"> enregistrer les modifications</button>
+	{{ form_widget(form) }}
 
-    {{ form_end(form)}}
+	<button type="submit" class="btn btn-primary">
+		enregistrer les modifications</button>
 
+	{{ form_end(form)}}
+
+	<hr class="my-5">
+	<h2>Mes commandes</h2>
+	{% if orders is empty %}
+		<div class="alert alert-info">
+			Vous n'avez pas encore passé de commande.
+		</div>
+	{% else %}
+		<div class="table-responsive">
+			<table class="table table-striped align-middle">
+				<thead>
+					<tr>
+						<th>Menu</th>
+						<th>Date de livraison</th>
+						<th>Personnes</th>
+						<th>Prix total</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for order in orders %}
+						<tr>
+							<td>{{ order.menu.title }}</td>
+							<td>{{ order.deliveryDate|date('d/m/y à H:i') }}</td>
+							<td>{{ order.numberOfPeople }}</td>
+							<td>{{ order.totalPrice|number_format(2, ',', ' ') }}
+								€</td>
+							<td>{{ order.status }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% endif %}
 {% endblock %}
