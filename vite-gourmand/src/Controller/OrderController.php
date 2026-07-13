@@ -6,11 +6,14 @@ use App\Entity\Menu;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Form\OrderType;
+use App\Service\DeliveryFeeCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
+
 
 final class OrderController extends AbstractController
 {
@@ -18,12 +21,24 @@ final class OrderController extends AbstractController
     public function create(
         Menu $menu,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        DeliveryFeeCalculator $deliveryFeeCalculator,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
+        $coordinates = $deliveryFeeCalculator->geocodeAddress(
+            '10 rue Sainte-Catherine, Bordeaux'
+        );
+
+        $distance = $deliveryFeeCalculator->calculateDistance($coordinates);
+
+        dd(
+            $distance,
+            $deliveryFeeCalculator->calculateDeliveryFee($distance)
+        );
+
         /** verification du stock */
-        if ($menu->getStock() <=0){
+        if ($menu->getStock() <= 0) {
             $this->addFlash(
                 'danger',
                 'Ce menu est actuellement en rupture de stock.'
@@ -49,18 +64,18 @@ final class OrderController extends AbstractController
             $menuPrice = (float) $menu->getPrice();
 
             if ($numberOfPeople < $minimumPerson) {
-    $this->addFlash(
-        'danger',
-        sprintf(
-            'Ce menu nécessite un minimum de %d personnes.',
-            $minimumPerson
-        )
-    );
+                $this->addFlash(
+                    'danger',
+                    sprintf(
+                        'Ce menu nécessite un minimum de %d personnes.',
+                        $minimumPerson
+                    )
+                );
 
-    return $this->redirectToRoute('app_order_create', [
-        'id' => $menu->getId(),
-    ]);
-}
+                return $this->redirectToRoute('app_order_create', [
+                    'id' => $menu->getId(),
+                ]);
+            }
 
             $pricePerPerson = $menuPrice / $minimumPerson;
             $totalPrice = $pricePerPerson * $numberOfPeople;
@@ -75,7 +90,7 @@ final class OrderController extends AbstractController
             );
 
             // Une commande validé consomme une unité de stock
-            $menu->setStock($menu->getStock()-1);
+            $menu->setStock($menu->getStock() - 1);
 
             $entityManager->persist($order);
             $entityManager->flush();
@@ -89,7 +104,7 @@ final class OrderController extends AbstractController
         ]);
     }
 
-    #[Route('/mes-commandes', name: 'app_order_history',methods:['get'])]
+    #[Route('/mes-commandes', name: 'app_order_history', methods: ['get'])]
     public function history(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -97,9 +112,8 @@ final class OrderController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        return $this->render('order/history.html.twig',[
+        return $this->render('order/history.html.twig', [
             'orders' => $user->getOrders(),
         ]);
     }
-
 }
