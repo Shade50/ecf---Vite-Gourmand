@@ -27,22 +27,30 @@
 			<table class="table table-striped align-middle">
 				<thead>
 					<tr>
+                        <th>n° commande</th>
 						<th>Menu</th>
 						<th>Date de livraison</th>
 						<th>Personnes</th>
 						<th>Prix total</th>
 						<th>Status</th>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for order in orders %}
 						<tr>
+                            <td>{{ order.id}}
 							<td>{{ order.menu.title }}</td>
 							<td>{{ order.deliveryDate|date('d/m/y à H:i') }}</td>
 							<td>{{ order.numberOfPeople }}</td>
 							<td>{{ order.totalPrice|number_format(2, ',', ' ') }}
 								€</td>
 							<td>{{ order.status }}</td>
+							<td>
+								<a href="{{ path('app_profile_order_detail', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary">
+									Voir le détail
+								</a>
+							</td>
 						</tr>
 					{% endfor %}
 				</tbody>
