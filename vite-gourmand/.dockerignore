@@ -1,0 +1,16 @@
+.git
+.gitignore
+.idea
+.vscode
+
+var/cache/*
+var/log/*
+
+.env.local
+.env.*.local
+
+node_modules
+npm-debug.log
+
+
+README.md
