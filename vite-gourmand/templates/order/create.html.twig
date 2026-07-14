@@ -1,107 +1,417 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Commander {{ menu.title }}{% endblock %}
+{% block title %}Commander
+	{{ menu.title }}
+{% endblock %}
 
 {% block body %}
-{% for message in app.flashes('danger') %}
-    <div class="alert alert-danger" role="alert">
-        {{ message }}
-    </div>
-{% endfor %}
-{# 
-debut card mes infos #}
+	{% for message in app.flashes('danger') %}
+		<div class="alert alert-danger" role="alert">
+			{{ message }}
+		</div>
+	{% endfor %}
+	{# 
+					debut card mes infos #}
 
-    <div class="mb-4">
+	<div class="mb-4">
 
-        <h2 class="h4">Vos informations</h2>
+		<h2 class="h4">Vos informations</h2>
 
-        <p class="mb-1">
-            <strong>Nom: </strong> {{app.user.nom}}
-        </p>
+		<p class="mb-1">
+			<strong>Nom:
+			</strong>
+			{{app.user.nom}}
+		</p>
 
-        <p class="mb-1">
-            <strong>Prénom: </strong> {{app.user.prenom}}
-        </p>
+		<p class="mb-1">
+			<strong>Prénom:
+			</strong>
+			{{app.user.prenom}}
+		</p>
 
-        <p class="mb-1">
-            <strong>Email: </strong> {{app.user.email}}
-        </p>
+		<p class="mb-1">
+			<strong>Email:
+			</strong>
+			{{app.user.email}}
+		</p>
 
-        <p class="mb-1">
-            <strong>Télèphone: </strong> {{app.user.gsm}}
-        </p>
+		<p class="mb-1">
+			<strong>Télèphone:
+			</strong>
+			{{app.user.gsm}}
+		</p>
 
-    </div>
+	</div>
 
-{# fin de card mes infos #}
+	{# fin de card mes infos #}
 
-{# debut card ma commande #}
-<p>
-    Prix du menu :
-    <strong>{{ menu.price }} €</strong>
-    pour {{ menu.minimumPerson }} personnes minimum
-</p>
+	{# debut card ma commande #}
+	<p>
+		Prix du menu :
+		<strong>{{ menu.price }}
+			€</strong>
+		pour
+		{{ menu.minimumPerson }}
+		personnes minimum
+	</p>
 
-<p>
-    Total :
-    <strong>
-        <span id="total-price">{{ menu.price }}</span> €
-    </strong>
-</p>
+	{# <p>
+						Total :
+						<strong>
+							<span id="menu-total-price">{{ menu.price }}</span>
+							€
+						</strong>
+					</p> #}
 
-<p id="discount-message" class="text-success d-none">
-    Réduction de 10 % appliquée
-</p>
+	<p id="discount-message" class="text-success d-none">
+		Réduction de 10 % appliquée
+	</p>
 
-{{ form_start(form) }}
-    {{ form_row(form.deliveryDate) }}
-    {{ form_row(form.numberOfPeople) }}
-    {{ form_row(form.deliveryAdresse) }}
+	{{ form_start(form) }}
+	{{ form_row(form.deliveryDate) }}
+	{{ form_row(form.numberOfPeople) }}
+	{{ form_row(form.deliveryAdresse) }}
 
-    <button type="submit" class="btn btn-primary">
-        Valider la commande
-    </button>
-{{ form_end(form) }}
 
-{# fin de la card mes commande #}
-<script>
-    const numberOfPeople = document.getElementById(
+	<div id="delivery-summary" class="card mt-4" data-preview-url="{{ path('app_order_delivery_preview', { id: menu.id }) }}">
+		<div class="card-body">
+			<h2 class="h5">Récapitulatif de votre commande</h2>
+
+			<div class="d-flex justify-content-between">
+				<span>Prix du menu</span>
+				<strong id="meal-price">0,00 €</strong>
+			</div>
+
+			<div id="discount-line" class="d-flex justify-content-between text-success d-none">
+				<span>Réduction de 10 %</span>
+				<strong id="discount-amount">-0,00 €</strong>
+			</div>
+
+			<hr>
+
+			<p class="mb-2">
+				Livraison :
+				<strong>5 € + 0,59 € par kilomètre</strong>
+			</p>
+
+			<div class="d-flex justify-content-between">
+				<span>Distance</span>
+				<strong id="delivery-distance">0 km</strong>
+			</div>
+
+			<div class="d-flex justify-content-between">
+				<span>Frais de livraison</span>
+				<strong id="delivery-fee">0,00 €</strong>
+			</div>
+
+			<hr>
+
+			<div class="d-flex justify-content-between fs-5">
+				<span>Total à payer</span>
+				<strong id="total-price">0,00 €</strong>
+			</div>
+		</div>
+	</div>
+
+	<div id="delivery-error" class="alert alert-danger mt-3 d-none"></div>
+
+	<button type="submit" class="btn btn-primary">
+		Valider la commande
+	</button>
+	{{ form_end(form) }}
+
+	{# fin de la card mes commande #}
+	<script>
+const initDeliveryCalculation = () => {
+    const summary = document.getElementById('delivery-summary');
+
+    // Évite les erreurs sur une autre page et les doubles initialisations Turbo
+    if (!summary || summary.dataset.initialized === 'true') {
+        return;
+    }
+
+    summary.dataset.initialized = 'true';
+
+    const errorBox = document.getElementById('delivery-error');
+
+    const addressInput = document.getElementById(
+        '{{ form.deliveryAdresse.vars.id }}'
+    );
+
+    const peopleInput = document.getElementById(
         '{{ form.numberOfPeople.vars.id }}'
     );
 
-    const totalPrice = document.getElementById('total-price');
-    const discountMessage = document.getElementById('discount-message');
+    const submitButton = document.querySelector(
+        '#{{ form.vars.id }} button[type="submit"]'
+    );
 
-    const menuPrice = parseFloat(
+    if (!addressInput || !peopleInput || !errorBox) {
+        return;
+    }
+
+    const menuPrice = Number.parseFloat(
         {{ menu.price|json_encode|raw }}
     );
 
     const minimumPerson = {{ menu.minimumPerson }};
 
-    function updateTotal() {
-        const people = parseInt(numberOfPeople.value) || 0;
+    let timer = null;
+    let currentDeliveryFee = 0;
 
-        if (people < minimumPerson) {
-            totalPrice.textContent = menuPrice.toFixed(2);
-            discountMessage.classList.add('d-none');
+    const formatPrice = (value) => {
+        return new Intl.NumberFormat('fr-FR', {
+            style: 'currency',
+            currency: 'EUR'
+        }).format(Number(value));
+    };
+
+    const updateLocalPrice = () => {
+        const numberOfPeople = Number.parseInt(
+            peopleInput.value,
+            10
+        );
+
+        let mealPrice = menuPrice;
+        let discountAmount = 0;
+
+        if (
+            Number.isNaN(numberOfPeople) ||
+            numberOfPeople < minimumPerson
+        ) {
+            document.getElementById('meal-price').textContent =
+                formatPrice(menuPrice);
+
+            document.getElementById('total-price').textContent =
+                formatPrice(menuPrice + currentDeliveryFee);
+
+            document
+                .getElementById('discount-line')
+                .classList.add('d-none');
+
             return;
         }
 
         const pricePerPerson = menuPrice / minimumPerson;
-        let total = pricePerPerson * people;
 
-        if (people >= minimumPerson + 5) {
-            total *= 0.90;
-            discountMessage.classList.remove('d-none');
-        } else {
-            discountMessage.classList.add('d-none');
+        mealPrice = pricePerPerson * numberOfPeople;
+
+        if (numberOfPeople >= minimumPerson + 5) {
+            discountAmount = mealPrice * 0.10;
+            mealPrice -= discountAmount;
         }
 
-        totalPrice.textContent = total.toFixed(2);
-    }
+        document.getElementById('meal-price').textContent =
+            formatPrice(mealPrice);
 
-    numberOfPeople.addEventListener('input', updateTotal);
+        document.getElementById('total-price').textContent =
+            formatPrice(mealPrice + currentDeliveryFee);
 
-    updateTotal();
+        const discountLine = document.getElementById(
+            'discount-line'
+        );
+
+        if (discountAmount > 0) {
+            document.getElementById(
+                'discount-amount'
+            ).textContent = '-' + formatPrice(discountAmount);
+
+            discountLine.classList.remove('d-none');
+        } else {
+            discountLine.classList.add('d-none');
+        }
+    };
+
+    const calculatePreview = async () => {
+        const address = addressInput.value.trim();
+
+        const numberOfPeople = Number.parseInt(
+            peopleInput.value,
+            10
+        );
+
+        updateLocalPrice();
+
+        if (address.length < 5) {
+            currentDeliveryFee = 0;
+
+            document.getElementById(
+                'delivery-distance'
+            ).textContent = 'Adresse à renseigner';
+
+            document.getElementById(
+                'delivery-fee'
+            ).textContent = 'En attente';
+
+            errorBox.classList.add('d-none');
+
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
+
+            updateLocalPrice();
+
+            return;
+        }
+
+        if (
+            Number.isNaN(numberOfPeople) ||
+            numberOfPeople < minimumPerson
+        ) {
+            errorBox.textContent =
+                `Ce menu nécessite un minimum de ${minimumPerson} personnes.`;
+
+            errorBox.classList.remove('d-none');
+
+            return;
+        }
+
+        if (submitButton) {
+            submitButton.disabled = true;
+        }
+
+        document.getElementById(
+            'delivery-distance'
+        ).textContent = 'Calcul en cours…';
+
+        document.getElementById(
+            'delivery-fee'
+        ).textContent = 'Calcul en cours…';
+
+        try {
+            const response = await fetch(
+                summary.dataset.previewUrl,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        address: address,
+                        numberOfPeople: numberOfPeople
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(
+                    result.message ??
+                    'Impossible de calculer la livraison.'
+                );
+            }
+
+            currentDeliveryFee = Number(result.deliveryFee);
+
+            document.getElementById(
+                'delivery-distance'
+            ).textContent =
+                Number(result.distance).toLocaleString('fr-FR') +
+                ' km';
+
+            document.getElementById(
+                'delivery-fee'
+            ).textContent =
+                formatPrice(currentDeliveryFee);
+
+            document.getElementById(
+                'meal-price'
+            ).textContent =
+                formatPrice(result.mealPrice);
+
+            document.getElementById(
+                'total-price'
+            ).textContent =
+                formatPrice(result.totalPrice);
+
+            const discountLine = document.getElementById(
+                'discount-line'
+            );
+
+            if (Number(result.discountAmount) > 0) {
+                document.getElementById(
+                    'discount-amount'
+                ).textContent =
+                    '-' + formatPrice(result.discountAmount);
+
+                discountLine.classList.remove('d-none');
+            } else {
+                discountLine.classList.add('d-none');
+            }
+
+            errorBox.classList.add('d-none');
+
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
+        } catch (error) {
+            currentDeliveryFee = 0;
+
+            document.getElementById(
+                'delivery-distance'
+            ).textContent = 'Non calculée';
+
+            document.getElementById(
+                'delivery-fee'
+            ).textContent = 'Non calculés';
+
+            errorBox.textContent = error.message;
+            errorBox.classList.remove('d-none');
+
+            updateLocalPrice();
+
+            if (submitButton) {
+                submitButton.disabled = true;
+            }
+        }
+    };
+
+    const scheduleCalculation = () => {
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+            calculatePreview();
+        }, 700);
+    };
+
+    peopleInput.addEventListener('input', () => {
+        updateLocalPrice();
+        scheduleCalculation();
+    });
+
+    peopleInput.addEventListener(
+        'change',
+        calculatePreview
+    );
+
+    addressInput.addEventListener(
+        'input',
+        scheduleCalculation
+    );
+
+    addressInput.addEventListener(
+        'change',
+        calculatePreview
+    );
+
+    updateLocalPrice();
+
+    // Attend que le navigateur et Symfony aient rempli les champs
+    setTimeout(() => {
+        calculatePreview();
+    }, 300);
+};
+
+document.addEventListener(
+    'DOMContentLoaded',
+    initDeliveryCalculation
+);
+
+document.addEventListener(
+    'turbo:load',
+    initDeliveryCalculation
+);
 </script>
 {% endblock %}
