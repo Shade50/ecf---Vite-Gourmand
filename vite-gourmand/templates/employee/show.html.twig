@@ -185,80 +185,83 @@
 
 				<div class="card-body">
 
-					<div class="row g-3 h-auto">
+					<form method="post" action="{{ path('app_employee_order_update', { id: order.id }) }}">
 
-						<div class="col-md-6">
-							<label class="form-label">Date de livraison</label>
+						<div class="row g-3 h-auto">
 
-							<input type="datetime-local" class="form-control" name="deliveryDate" value="{{ order.deliveryDate|date('Y-m-d\\TH:i') }}">
-						</div>
-
-						<div class="col-md-6">
-							<label class="form-label">Nombre de personnes</label>
-
-							<input type="number" class="form-control" name="numberOfPeople" value="{{ order.numberOfPeople }}">
-						</div>
-
-						<div class="col-12">
-							<label class="form-label">Adresse de livraison</label>
-
-							<textarea class="form-control" name="deliveryAdresse" rows="3">{{ order.deliveryAdresse }}</textarea>
-						</div>
-
-						<h3>Communication avec le client</h3>
-						<p>---------------------------------</p>
-
-						<div class="row g-3">
 							<div class="col-md-6">
-								<label class="form-label">
-									Mode de contact
-								</label>
+								<label class="form-label">Date de livraison</label>
 
-								<div class="d-flex gap-4">
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="contactMode" id="contact-phone" value="Téléphone" required>
+								<input type="datetime-local" class="form-control" name="deliveryDate" value="{{ order.deliveryDate|date('Y-m-d\\TH:i') }}">
+							</div>
 
-										<label class="form-check-label" for="contact-phone">
-											Téléphone
-										</label>
-									</div>
+							<div class="col-md-6">
+								<label class="form-label">Nombre de personnes</label>
 
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="contactMode" id="contact-email" value="E-mail" required>
-
-										<label class="form-check-label" for="contact-email">
-											E-mail
-										</label>
-									</div>
-								</div>
+								<input type="number" class="form-control" name="numberOfPeople" value="{{ order.numberOfPeople }}">
 							</div>
 
 							<div class="col-12">
-								<label for="contact-reason" class="form-label">
-									Motif
-								</label>
+								<label class="form-label">Adresse de livraison</label>
 
-								<textarea id="contact-reason" name="contactReason" class="form-control" rows="3" required></textarea>
+								<textarea class="form-control" name="deliveryAdresse" rows="3">{{ order.deliveryAdresse }}</textarea>
 							</div>
 
-							<div class="col-md-6 d-grid">
-								<button type="submit" name="action" value="update" class="btn btn-primary">
-									Enregistrer les modifications
-								</button>
-							</div>
+							<h3>Communication avec le client</h3>
+							<p>---------------------------------</p>
 
-							<div class="col-md-6 d-grid">
-								<button type="submit" name="action" value="cancel" class="btn btn-danger" onclick="return confirm(
-																																										                'Confirmer l’annulation de cette commande ?'
-																																										            );">
-									Annuler la commande
-								</button>
+							<div class="row g-3">
+								<div class="col-md-6">
+									<label class="form-label">
+										Mode de contact
+									</label>
+
+									<div class="d-flex gap-4">
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="contactMode" id="contact-phone" value="Téléphone" required>
+
+											<label class="form-check-label" for="contact-phone">
+												Téléphone
+											</label>
+										</div>
+
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="contactMode" id="contact-email" value="E-mail" required>
+
+											<label class="form-check-label" for="contact-email">
+												E-mail
+											</label>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-12">
+									<label for="contact-reason" class="form-label">
+										Motif
+									</label>
+
+									<textarea id="contact-reason" name="contactReason" class="form-control" rows="3" required></textarea>
+								</div>
+
+								<div class="col-md-6 d-grid">
+									<button type="submit" name="action" value="update" class="btn btn-primary">
+										Enregistrer les modifications
+									</button>
+								</div>
+
+								<div class="col-md-6 d-grid">
+									<button type="submit" name="action" value="cancel" class="btn btn-danger" onclick="return confirm(
+																																																																                'Confirmer l’annulation de cette commande ?'
+																																																																            );">
+										Annuler la commande
+									</button>
+								</div>
 							</div>
 						</div>
-
 					</div>
+					<input type="hidden" name="_token" value="{{ csrf_token('update-order-' ~ order.id) }}">
 
-				</div>
+				</form>
 			</div>
 		</div>
 

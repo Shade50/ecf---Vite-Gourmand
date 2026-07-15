@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,6 +42,21 @@ class Order
 
     #[ORM\Column(length: 255)]
     private ?string $deliveryAdresse = null;
+
+    /**
+     * @var Collection<int, OrderStatusHistory>
+     */
+    #[ORM\OneToMany(
+        mappedBy: 'commande',
+        targetEntity: OrderStatusHistory::class,
+        orphanRemoval: true
+    )]
+    private Collection $orderStatusHistories;
+
+    public function __construct()
+    {
+        $this->orderStatusHistories = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -138,6 +155,37 @@ class Order
     public function setDeliveryAdresse(string $deliveryAdresse): static
     {
         $this->deliveryAdresse = $deliveryAdresse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderStatusHistory>
+     */
+    public function getOrderStatusHistories(): Collection
+    {
+        return $this->orderStatusHistories;
+    }
+
+    public function addOrderStatusHistory(
+        OrderStatusHistory $orderStatusHistory
+    ): static {
+        if (!$this->orderStatusHistories->contains($orderStatusHistory)) {
+            $this->orderStatusHistories->add($orderStatusHistory);
+            $orderStatusHistory->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderStatusHistory(
+        OrderStatusHistory $orderStatusHistory
+    ): static {
+        if ($this->orderStatusHistories->removeElement($orderStatusHistory)) {
+            if ($orderStatusHistory->getCommande() === $this) {
+                $orderStatusHistory->setCommande(null);
+            }
+        }
 
         return $this;
     }
