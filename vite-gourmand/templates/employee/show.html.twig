@@ -125,34 +125,23 @@
 			</div>
 
 		</div>
-        <div class="card mt-4">
-    <div class="card-header">
-        <strong>Gestion du statut</strong>
-    </div>
 
-    <div class="card-body">
-        <form
-            method="post"
-            action="{{ path('app_employee_order_status', {
-                id: order.id
-            }) }}"
-        >
-            <div class="row g-3 align-items-end">
-                <div class="col-md-8">
-                    <label
-                        for="order-status"
-                        class="form-label"
-                    >
-                        Nouveau statut
-                    </label>
+		{# gestion du status de la commande #}
+		<div class="card mt-4">
+			<div class="card-header">
+				<strong>Gestion du statut</strong>
+			</div>
 
-                    <select
-                        id="order-status"
-                        name="status"
-                        class="form-select"
-                        required
-                    >
-                        {% set statuses = [
+			<div class="card-body">
+				<form method="post" action="{{ path('app_employee_order_status', { id: order.id }) }}">
+					<div class="row g-3 align-items-end">
+						<div class="col-md-8">
+							<label for="order-status" class="form-label">
+								Nouveau statut
+							</label>
+
+							<select id="order-status" name="status" class="form-select" required>
+								{% set statuses = [
                             'En attente',
                             'Acceptée',
                             'En préparation',
@@ -163,38 +152,116 @@
                             'Annulée'
                         ] %}
 
-                        {% for status in statuses %}
-                            <option
-                                value="{{ status }}"
-                                {% if order.status == status %}
-                                    selected
-                                {% endif %}
-                            >
-                                {{ status }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+								{% for status in statuses %}
+									<option value="{{ status }}" {% if order.status == status %} selected {% endif %}>
+										{{ status }}
+									</option>
+								{% endfor %}
+							</select>
+						</div>
 
-                <div class="col-md-4 d-grid">
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                    >
-                        Enregistrer le statut
-                    </button>
-                </div>
-            </div>
+						<div class="col-md-4 d-grid">
+							<button type="submit" class="btn btn-primary">
+								Enregistrer le statut
+							</button>
+						</div>
+					</div>
 
-            <input
-                type="hidden"
-                name="_token"
-                value="{{ csrf_token(
-                    'update-status-' ~ order.id
-                ) }}"
-            >
-        </form>
-    </div>
-</div>
-	</div>
+					<input type="hidden" name="_token" value="{{ csrf_token( 'update-status-' ~ order.id ) }}">
+				</form>
+			</div>
+		</div>
+
+
+		{# card modification/annulation commande #}
+
+		{% if order.status == 'En attente' %}
+
+			{# Carte Modification de la commande #}
+			<div class="card mt-4">
+				<div class="card-header">
+					<strong>Modification / Annulation de la commande</strong>
+				</div>
+
+				<div class="card-body">
+
+					<div class="row g-3 h-auto">
+
+						<div class="col-md-6">
+							<label class="form-label">Date de livraison</label>
+
+							<input type="datetime-local" class="form-control" name="deliveryDate" value="{{ order.deliveryDate|date('Y-m-d\\TH:i') }}">
+						</div>
+
+						<div class="col-md-6">
+							<label class="form-label">Nombre de personnes</label>
+
+							<input type="number" class="form-control" name="numberOfPeople" value="{{ order.numberOfPeople }}">
+						</div>
+
+						<div class="col-12">
+							<label class="form-label">Adresse de livraison</label>
+
+							<textarea class="form-control" name="deliveryAdresse" rows="3">{{ order.deliveryAdresse }}</textarea>
+						</div>
+
+						<h3>Communication avec le client</h3>
+						<p>---------------------------------</p>
+
+						<div class="row g-3">
+							<div class="col-md-6">
+								<label class="form-label">
+									Mode de contact
+								</label>
+
+								<div class="d-flex gap-4">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="contactMode" id="contact-phone" value="Téléphone" required>
+
+										<label class="form-check-label" for="contact-phone">
+											Téléphone
+										</label>
+									</div>
+
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="contactMode" id="contact-email" value="E-mail" required>
+
+										<label class="form-check-label" for="contact-email">
+											E-mail
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-12">
+								<label for="contact-reason" class="form-label">
+									Motif
+								</label>
+
+								<textarea id="contact-reason" name="contactReason" class="form-control" rows="3" required></textarea>
+							</div>
+
+							<div class="col-md-6 d-grid">
+								<button type="submit" name="action" value="update" class="btn btn-primary">
+									Enregistrer les modifications
+								</button>
+							</div>
+
+							<div class="col-md-6 d-grid">
+								<button type="submit" name="action" value="cancel" class="btn btn-danger" onclick="return confirm(
+																																										                'Confirmer l’annulation de cette commande ?'
+																																										            );">
+									Annuler la commande
+								</button>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	{% endif %}
+
 {% endblock %}
