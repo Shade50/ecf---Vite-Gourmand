@@ -1,0 +1,51 @@
+<p>Nombre d’historiques :
+	{{ order.orderStatusHistories|length }}</p>
+
+<h2 class="h5 mb-3">Suivi de la commande</h2>
+
+<div class="mb-3">
+	<div class="d-flex justify-content-between align-items-start border-start border-3 ps-3 pb-3">
+		<div>
+			<strong>Commande créée</strong>
+			<div class="text-muted">
+				Commande enregistrée
+			</div>
+		</div>
+
+		<small class="text-muted">
+			{{ order.createAt|date('d/m/Y à H:i') }}
+		</small>
+	</div>
+</div>
+
+{% if order.orderStatusHistories is not empty %}
+	{% for history in order.orderStatusHistories %}
+		<div class="mb-3">
+			<div class="d-flex justify-content-between align-items-start border-start border-3 ps-3 pb-3">
+				<div>
+					<strong>
+						{{ history.oldStatus|replace({'_': ' '})|capitalize }}
+						→
+						{{ history.newStatus|replace({'_': ' '})|capitalize }}
+					</strong>
+
+					{% if history.changedBy %}
+						<div class="text-muted">
+							Modification effectuée par
+							{{ history.changedBy.nom }}
+							{{ history.changedBy.prenom }}
+						</div>
+					{% endif %}
+				</div>
+
+				<small class="text-muted">
+					{{ history.changedAt|date('d/m/Y à H:i') }}
+				</small>
+			</div>
+		</div>
+	{% endfor %}
+{% else %}
+	<div class="alert alert-light mb-0">
+		Aucun changement de statut pour le moment.
+	</div>
+{% endif %}
