@@ -20,7 +20,9 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class, $user, [
+            'is_admin' => $this->isGranted('ROLE_ADMIN'),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -31,18 +33,41 @@ class RegistrationController extends AbstractController
                 $userPasswordHasher->hashPassword($user, $plainPassword)
             );
 
-            $roleUser = $entityManager
-                ->getRepository(Role::class)
-                ->findOneBy(['libelle' => 'ROLE_USER']);
+            $roleLibelle = 'ROLE_USER';
 
-            if ($roleUser === null) {
-                throw new \RuntimeException('Le rôle ROLE_USER est introuvable.');
+            if (
+                $this->isGranted('ROLE_ADMIN')
+                && $form->has('createAsEmployee')
+                && $form->get('createAsEmployee')->getData()
+            ) {
+                $roleLibelle = 'ROLE_EMPLOYEE';
             }
 
-            $user->setRole($roleUser);
+            $role = $entityManager
+                ->getRepository(Role::class)
+                ->findOneBy(['libelle' => $roleLibelle]);
+
+            if ($role === null) {
+                throw new \RuntimeException(
+                    sprintf('Le rôle %s est introuvable.', $roleLibelle)
+                );
+            }
+
+            $user->setRole($role);
 
             $entityManager->persist($user);
             $entityManager->flush();
+
+            if ($this->isGranted('ROLE_ADMIN')) {
+                $this->addFlash(
+                    'success',
+                    $roleLibelle === 'ROLE_EMPLOYEE'
+                        ? 'Le compte employé a bien été créé.'
+                        : 'Le compte utilisateur a bien été créé.'
+                );
+
+                return $this->redirectToRoute('app_admin');
+            }
 
             return $security->login($user, 'form_login', 'main');
         }
@@ -52,3 +77,4 @@ class RegistrationController extends AbstractController
         ]);
     }
 }
+

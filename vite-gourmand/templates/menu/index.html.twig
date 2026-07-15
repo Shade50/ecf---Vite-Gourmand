@@ -1,47 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Menu index{% endblock %}
+{% block title %}Menu index
+{% endblock %}
 
 {% block body %}
-    <h1>Menu index</h1>
+	<h1>Menu index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>MinimumPerson</th>
-                <th>Price</th>
-                <th>Conditions</th>
-                <th>Stock</th>
-                <th>Image</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for menu in menus %}
-            <tr>
-                <td>{{ menu.id }}</td>
-                <td>{{ menu.title }}</td>
-                <td>{{ menu.description }}</td>
-                <td>{{ menu.minimumPerson }}</td>
-                <td>{{ menu.price }}</td>
-                <td>{{ menu.conditions }}</td>
-                <td>{{ menu.stock }}</td>
-                <td>{{ menu.image }}</td>
-                <td>
-                    <a href="{{ path('app_menu_show', {'id': menu.id}) }}">show</a>
-                    <a href="{{ path('app_menu_edit', {'id': menu.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Title</th>
+				<th>Description</th>
+				<th>MinimumPerson</th>
+				<th>Price</th>
+				<th>Conditions</th>
+				<th>Stock</th>
+				<th>Image</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for menu in menus %}
+				<tr>
+					<td>{{ menu.id }}</td>
+					<td>{{ menu.title }}</td>
+					<td>{{ menu.description }}</td>
+					<td>{{ menu.minimumPerson }}</td>
+					<td>{{ menu.price }}</td>
+					<td>{{ menu.conditions }}</td>
+					<td>{{ menu.stock }}</td>
+					<td>{{ menu.image }}</td>
+					<td>
+						<a href="{{ path('app_menu_show', {'id': menu.id}) }}">show</a>
+						<a href="{{ path('app_menu_edit', {'id': menu.id}) }}">edit</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="9">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
-    <a href="{{ path('app_menu_new') }}">Create new</a>
+	{% if is_granted('ROLE_ADMIN') %}
+		<a href="{{ path('app_menu_new') }}">Créer un menu</a>
+	{% endif %}
 {% endblock %}

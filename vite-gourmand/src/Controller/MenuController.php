@@ -21,7 +21,7 @@ final class MenuController extends AbstractController
             'menus' => $menuRepository->findAll(),
         ]);
     }
-
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/menu/new', name: 'app_menu_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
