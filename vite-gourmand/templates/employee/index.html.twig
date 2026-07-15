@@ -1,157 +1,142 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Espace employé{% endblock %}
+{% block title %}Espace employé
+{% endblock %}
 
 {% block body %}
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="mb-1">Tableau de bord employé</h1>
-            <p class="text-muted mb-0">
-                Gestion et suivi des commandes clients.
-            </p>
-        </div>
-    </div>
+	<div class="container py-5">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<div>
+				<h1 class="mb-1">Tableau de bord employé</h1>
+				<p class="text-muted mb-0">
+					Gestion et suivi des commandes clients.
+				</p>
+			</div>
+			{% if is_granted('ROLE_ADMIN') %}
+				<a href="{{ path('app_admin') }}" class="btn btn-outline-secondary mb-4">
+					<i class="bi bi-arrow-left"></i>
+					Retour au tableau de bord
+				</a>
+			{% endif %}
+		</div>
 
-    <form method="get" class="card card-body mb-4">
-        <div class="row g-3 align-items-end">
-            <div class="col-md-6">
-                <label for="search" class="form-label">
-                    Rechercher un client
-                </label>
+		<form method="get" class="card card-body mb-4">
+			<div class="row g-3 align-items-end">
+				<div class="col-md-6">
+					<label for="search" class="form-label">
+						Rechercher un client
+					</label>
 
-                <input
-                    type="search"
-                    id="search"
-                    name="search"
-                    class="form-control"
-                    placeholder="Nom, prénom ou adresse e-mail"
-                    value="{{ search }}"
-                >
-            </div>
+					<input type="search" id="search" name="search" class="form-control" placeholder="Nom, prénom ou adresse e-mail" value="{{ search }}">
+				</div>
 
-            <div class="col-md-4">
-                <label for="status" class="form-label">
-                    Filtrer par statut
-                </label>
+				<div class="col-md-4">
+					<label for="status" class="form-label">
+						Filtrer par statut
+					</label>
 
-                <select
-                    id="status"
-                    name="status"
-                    class="form-select"
-                >
-                    <option value="">Tous les statuts</option>
+					<select id="status" name="status" class="form-select">
+						<option value="">Tous les statuts</option>
 
-                    {% for status in statuses %}
-                        <option
-                            value="{{ status }}"
-                            {% if currentStatus == status %}selected{% endif %}
-                        >
-                            {{ status }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
+						{% for status in statuses %}
+							<option value="{{ status }}" {% if currentStatus == status %} selected {% endif %}>
+								{{ status }}
+							</option>
+						{% endfor %}
+					</select>
+				</div>
 
-            <div class="col-md-2 d-grid">
-                <button type="submit" class="btn btn-primary">
-                    Rechercher
-                </button>
-            </div>
-        </div>
+				<div class="col-md-2 d-grid">
+					<button type="submit" class="btn btn-primary">
+						Rechercher
+					</button>
+				</div>
+			</div>
 
-        {% if search or currentStatus %}
-            <div class="mt-3">
-                <a
-                    href="{{ path('app_employee_index') }}"
-                    class="btn btn-outline-secondary btn-sm"
-                >
-                    Réinitialiser les filtres
-                </a>
-            </div>
-        {% endif %}
-    </form>
+			{% if search or currentStatus %}
+				<div class="mt-3">
+					<a href="{{ path('app_employee_index') }}" class="btn btn-outline-secondary btn-sm">
+						Réinitialiser les filtres
+					</a>
+				</div>
+			{% endif %}
+		</form>
 
-    <div class="card">
-        <div class="card-header">
-            <strong>Liste des commandes</strong>
-        </div>
+		<div class="card">
+			<div class="card-header">
+				<strong>Liste des commandes</strong>
+			</div>
 
-        <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th>N°</th>
-                        <th>Client</th>
-                        <th>Menu</th>
-                        <th>Livraison</th>
-                        <th>Personnes</th>
-                        <th>Total</th>
-                        <th>Statut</th>
-                        <th class="text-end">Action</th>
-                    </tr>
-                </thead>
+			<div class="table-responsive">
+				<table class="table table-striped table-hover align-middle mb-0">
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Client</th>
+							<th>Menu</th>
+							<th>Livraison</th>
+							<th>Personnes</th>
+							<th>Total</th>
+							<th>Statut</th>
+							<th class="text-end">Action</th>
+						</tr>
+					</thead>
 
-                <tbody>
-                    {% for order in orders %}
-                        <tr>
-                            <td>#{{ order.id }}</td>
+					<tbody>
+						{% for order in orders %}
+							<tr>
+								<td>#{{ order.id }}</td>
 
-                            <td>
-                                <strong>
-                                    {{ order.user.nom }}
-                                    {{ order.user.prenom }}
-                                </strong>
+								<td>
+									<strong>
+										{{ order.user.nom }}
+										{{ order.user.prenom }}
+									</strong>
 
-                                <div class="small text-muted">
-                                    {{ order.user.email }}
-                                </div>
-                            </td>
+									<div class="small text-muted">
+										{{ order.user.email }}
+									</div>
+								</td>
 
-                            <td>
-                                {{ order.menu.title }}
-                            </td>
+								<td>
+									{{ order.menu.title }}
+								</td>
 
-                            <td>
-                                {{ order.deliveryDate|date('d/m/Y à H:i') }}
-                            </td>
+								<td>
+									{{ order.deliveryDate|date('d/m/Y à H:i') }}
+								</td>
 
-                            <td>
-                                {{ order.numberOfPeople }}
-                            </td>
+								<td>
+									{{ order.numberOfPeople }}
+								</td>
 
-                            <td>
-                                {{ order.totalPrice|number_format(2, ',', ' ') }} €
-                            </td>
+								<td>
+									{{ order.totalPrice|number_format(2, ',', ' ') }}
+									€
+								</td>
 
-                            <td>
-                                <span class="badge text-bg-secondary">
-                                    {{ order.status }}
-                                </span>
-                            </td>
+								<td>
+									<span class="badge text-bg-secondary">
+										{{ order.status }}
+									</span>
+								</td>
 
-                            <td class="text-end">
-                                <a
-                                    href="#"
-                                    class="btn btn-outline-primary btn-sm"
-                                >
-                                    Voir
-                                </a>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td
-                                colspan="8"
-                                class="text-center py-4 text-muted"
-                            >
-                                Aucune commande trouvée.
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+								<td class="text-end">
+									<a href="#" class="btn btn-outline-primary btn-sm">
+										Voir
+									</a>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="8" class="text-center py-4 text-muted">
+									Aucune commande trouvée.
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 {% endblock %}
