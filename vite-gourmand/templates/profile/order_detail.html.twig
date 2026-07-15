@@ -1,119 +1,174 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Détail de la commande
+	Détail de la commande
 {% endblock %}
 
 {% block body %}
-<div class="container py-5">
+	<div class="container py-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Détail de la commande #{{ order.id }}</h1>
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h1>Détail de la commande #{{ order.id }}</h1>
 
-        <a href="{{ path('app_profile') }}" class="btn btn-outline-secondary">
-            Retour au profil
-        </a>
-    </div>
+			<a href="{{ path('app_profile') }}" class="btn btn-outline-secondary">
+				Retour au profil
+			</a>
+		</div>
 
-    <div class="card shadow-sm">
-        <div class="card-header">
-            <strong>Commande n°{{ order.id }}</strong>
-        </div>
+		<div class="card shadow-sm">
+			<div class="card-header">
+				<strong>Commande n°{{ order.id }}</strong>
+			</div>
 
-        <div class="card-body">
+			<div class="card-body">
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>Date de la commande :</strong>
-                </div>
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<strong>Date de la commande :</strong>
+					</div>
 
-                <div class="col-md-6">
-                    {{ order.createAt|date('d/m/Y à H:i') }}
-                </div>
-            </div>
+					<div class="col-md-6">
+						{{ order.createAt|date('d/m/Y à H:i') }}
+					</div>
+				</div>
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>Menu :</strong>
-                </div>
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<strong>Menu :</strong>
+					</div>
 
-                <div class="col-md-6">
-                    {{ order.menu.title }}
-                </div>
-            </div>
+					<div class="col-md-6">
+						{{ order.menu.title }}
+					</div>
+				</div>
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>Nombre de personnes :</strong>
-                </div>
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<strong>Nombre de personnes :</strong>
+					</div>
 
-                <div class="col-md-6">
-                    {{ order.numberOfPeople }}
-                </div>
-            </div>
+					<div class="col-md-6">
+						{{ order.numberOfPeople }}
+					</div>
+				</div>
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>Prix total :</strong>
-                </div>
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<strong>Prix total :</strong>
+					</div>
 
-                <div class="col-md-6">
-                    {{ order.totalPrice|number_format(2, ',', ' ') }} €
-                </div>
-            </div>
+					<div class="col-md-6">
+						{{ order.totalPrice|number_format(2, ',', ' ') }}
+						€
+					</div>
+				</div>
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>Date de livraison :</strong>
-                </div>
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<strong>Date de livraison :</strong>
+					</div>
 
-                <div class="col-md-6">
-                    {% if order.deliveryDate %}
-                        {{ order.deliveryDate|date('d/m/Y à H:i') }}
-                    {% else %}
-                        Non renseignée
-                    {% endif %}
-                </div>
-            </div>
+					<div class="col-md-6">
+						{% if order.deliveryDate %}
+							{{ order.deliveryDate|date('d/m/Y à H:i') }}
+						{% else %}
+							Non renseignée
+						{% endif %}
+					</div>
+				</div>
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>Adresse de livraison :</strong>
-                </div>
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<strong>Adresse de livraison :</strong>
+					</div>
 
-                <div class="col-md-6">
-                    {{ order.deliveryAdresse ?: 'Non renseignée' }}
-                </div>
-            </div>
+					<div class="col-md-6">
+						{{ order.deliveryAdresse ?: 'Non renseignée' }}
+					</div>
+				</div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <strong>Statut :</strong>
-                </div>
+				<div class="row">
+					<div class="col-md-6">
+						<strong>Statut :</strong>
+						<div class="text-muted">
+							Commande enregistrée
+						</div>
+					</div>
 
-                <div class="col-md-6">
-                    {% if order.status == 'en_attente' %}
-                        <span class="badge bg-warning text-dark">
-                            En attente
-                        </span>
-                    {% elseif order.status == 'validee' %}
-                        <span class="badge bg-success">
-                            Validée
-                        </span>
-                    {% elseif order.status == 'annulee' %}
-                        <span class="badge bg-danger">
-                            Annulée
-                        </span>
-                    {% else %}
-                        <span class="badge bg-secondary">
-                            {{ order.status|replace({'_': ' '})|capitalize }}
-                        </span>
-                    {% endif %}
-                </div>
-            </div>
+					<div class="col-md-6">
+						{% if order.status == 'en_attente' %}
+							<span class="badge bg-warning text-dark">
+								En attente
+							</span>
+						{% elseif order.status == 'validee' %}
+							<span class="badge bg-success">
+								Validée
+							</span>
+						{% elseif order.status == 'annulee' %}
+							<span class="badge bg-danger">
+								Annulée
+							</span>
+						{% else %}
+							<span class="badge bg-secondary">
+								{{ order.status|replace({'_': ' '})|capitalize }}
+							</span>
+						{% endif %}
+					</div>
+				</div>
+				<hr class="my-4">
 
-        </div>
-    </div>
+                <p>Nombre d’historiques : {{ order.orderStatusHistories|length }}</p>
 
-</div>
+				<h2 class="h5 mb-3">Suivi de la commande</h2>
+
+				<div class="mb-3">
+					<div class="d-flex justify-content-between align-items-start border-start border-3 ps-3 pb-3">
+						<div>
+							<strong>Commande créée</strong>
+							<div class="text-muted">
+								Commande enregistrée
+							</div>
+						</div>
+
+						<small class="text-muted">
+							{{ order.createAt|date('d/m/Y à H:i') }}
+						</small>
+					</div>
+				</div>
+
+				{% if order.orderStatusHistories is not empty %}
+					{% for history in order.orderStatusHistories %}
+						<div class="mb-3">
+							<div class="d-flex justify-content-between align-items-start border-start border-3 ps-3 pb-3">
+								<div>
+									<strong>
+										{{ history.oldStatus|replace({'_': ' '})|capitalize }}
+										→
+										{{ history.newStatus|replace({'_': ' '})|capitalize }}
+									</strong>
+
+									{% if history.changedBy %}
+										<div class="text-muted">
+											Modification effectuée par
+											{{ history.changedBy.nom }}
+											{{ history.changedBy.prenom }}
+										</div>
+									{% endif %}
+								</div>
+
+								<small class="text-muted">
+									{{ history.changedAt|date('d/m/Y à H:i') }}
+								</small>
+							</div>
+						</div>
+					{% endfor %}
+				{% else %}
+					<div class="alert alert-light mb-0">
+						Aucun changement de statut pour le moment.
+					</div>
+				{% endif %}
+			</div>
+		</div>
+
+	</div>
 {% endblock %}
