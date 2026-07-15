@@ -20,17 +20,30 @@
 					{{ form_row(registrationForm.email) }}
 
 					{{ form_row(registrationForm.plainPassword, {label: 'Password'}) }}
-                    
+
 					{{ form_row(registrationForm.gsm) }}
-					{{ form_row(registrationForm.agreeTerms) }}
+					{% if registrationForm.agreeTerms is defined %}
+						{{ form_row(registrationForm.agreeTerms) }}
+					{% endif %}
+					{% if registrationForm.createAsEmployee is defined %}
+						{{ form_row(registrationForm.createAsEmployee) }}
+					{% endif %}
 
 
-                    <div class="mt-3 mb-2 d-flex justify-content-center gap-3" >
-                        <button type="submit" class="btn btn_admin_setting mr-5">Créer mon compte</button>
-                        <a href="{{path('app_login')}}" class="btn btn_admin_setting mr-5">Retour</a>
-                    </div>
+					<div class="mt-3 mb-2 d-flex justify-content-center gap-3">
+						<button type="submit" class="btn btn_admin_setting mr-5">Créer mon compte</button>
+						{% if is_granted('ROLE_ADMIN') %}
+							<a href="{{ path('app_admin') }}" class="btn btn_admin_setting mr-5">
+								Retour
+							</a>
+						{% else %}
+							<a href="{{ path('app_login') }}" class="btn btn_admin_setting mr-5">
+								Retour
+							</a>
+						{% endif %}
+					</div>
 
-					
+
 					{{ form_end(registrationForm) }}
 				</div>
 			</div>

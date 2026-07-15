@@ -20,24 +20,14 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('nom')
-            ->add('prenom',null,[
-                'label'=> 'Prénom',
+            ->add('prenom', null, [
+                'label' => 'Prénom',
             ])
-            ->add('gsm',null,[
+            ->add('gsm', null, [
                 'label' => 'Téléphone',
             ])
             ->add('adressePostale')
             ->add('email')
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'label' => 'J’accepte les conditions générales de vente',
-                'constraints' => [
-                    new IsTrue(
-                        message: 'Vous devez accepter les conditions générales de vente.',
-                    ),
-
-                ],
-            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
@@ -70,12 +60,33 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
         ;
+        if (!$options['is_admin']) {
+            $builder->add('agreeTerms', CheckboxType::class, [
+                'mapped' => false,
+                'label' => "J'accepte les conditions générales de vente",
+                'constraints' => [
+                    new IsTrue([
+                        'message' => 'Vous devez accepter les conditions générales de vente.',
+                    ]),
+                ],
+            ]);
+        }
+        if ($options['is_admin']) {
+            $builder->add('createAsEmployee', CheckboxType::class, [
+                'label' => 'Créer ce compte comme employé',
+                'mapped' => false,
+                'required' => false,
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'is_admin' => false,
         ]);
+
+        $resolver->setAllowedTypes('is_admin', 'bool');
     }
 }

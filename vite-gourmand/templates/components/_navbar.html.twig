@@ -26,6 +26,8 @@
 
 								{% if is_granted('ROLE_ADMIN') %}
 									<a href="{{ path('app_admin') }}" class="nav-link">Administration</a>
+								{% elseif is_granted('ROLE_EMPLOYEE')%}
+									<a href="{{ path('app_employee_index') }}" class="nav-link">Bureau employé</a>
 								{% endif %}
 								{# <a href="{{ path('app_logout') }}" class="nav-link">Déconnexion</a> #}
 								{# <a href="#" class="nav-link">Déconnexion TEST</a> #}

@@ -1,8 +1,8 @@
 security:
 
     role_hierarchy:
-            ROLE_EMPLOYER: ROLE_USER
-            ROLE_ADMIN: ROLE_EMPLOYER
+            ROLE_EMPLOYEE: ROLE_USER
+            ROLE_ADMIN: ROLE_EMPLOYEE
 
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -35,7 +35,9 @@ security:
                 enable_csrf: true
 
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/admin/menu, roles: ROLE_EMPLOYEE }
+    - { path: ^/admin/plat, roles: ROLE_EMPLOYEE }
+    - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:

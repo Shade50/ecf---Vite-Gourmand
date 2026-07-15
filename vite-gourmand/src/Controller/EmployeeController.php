@@ -26,7 +26,7 @@ final class EmployeeController extends AbstractController
         Request $request,
         OrderRepository $orderRepository,
     ): Response {
-        $this->denyAccessUnlessGranted('ROLE_EMPLOYER');
+        $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
 
         $search = trim((string) $request->query->get('search', ''));
         $status = trim((string) $request->query->get('status', ''));
@@ -60,7 +60,7 @@ final class EmployeeController extends AbstractController
     )]
     public function show(Order $order): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_EMPLOYER');
+        $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
 
         return $this->render('employee/show.html.twig', [
             'order' => $order,
@@ -77,7 +77,7 @@ final class EmployeeController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
     ): Response {
-        $this->denyAccessUnlessGranted('ROLE_EMPLOYER');
+        $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
         $oldStatus = $order->getStatus();
 
         // dd($request->request->all());
@@ -158,7 +158,7 @@ final class EmployeeController extends AbstractController
         EntityManagerInterface $entityManager,
         DeliveryFeeCalculator $deliveryFeeCalculator,
     ): Response {
-        $this->denyAccessUnlessGranted('ROLE_EMPLOYER');
+        $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
 
 
         if (!$this->isCsrfTokenValid(
