@@ -23,8 +23,10 @@
     <body>
         
         {% include 'components/_navbar.html.twig' %}
+        {% include 'components/_flashAlert.html.twig' %}
 
-        {% block body %}{% endblock %}
+        {% block body %}
+        {% endblock %}
 
         {% include 'components/_footer.html.twig' %}
     </body>
