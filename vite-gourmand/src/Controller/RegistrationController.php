@@ -72,9 +72,59 @@ class RegistrationController extends AbstractController
             return $security->login($user, 'form_login', 'main');
         }
 
+        $roleEmployee = $entityManager
+            ->getRepository(Role::class)
+            ->findOneBy(['libelle' => 'ROLE_EMPLOYEE']);
+
+        $employees = [];
+
+        if ($this->isGranted('ROLE_ADMIN') && $roleEmployee) {
+            $employees = $entityManager
+                ->getRepository(User::class)
+                ->findBy(
+                    ['role' => $roleEmployee],
+                    ['nom' => 'ASC']
+                );
+        }
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
+            'employees' => $employees,
         ]);
     }
-}
 
+    #[Route(
+        '/admin/employees/{id}/toggle',
+        name: 'app_admin_employee_toggle',
+        methods: ['POST']
+    )]
+    public function toggleEmployee(
+        User $employee,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if (!$this->isCsrfTokenValid(
+            'toggle_employee_' . $employee->getId(),
+            $request->request->get('_token')
+        )) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+        }
+
+        if (!in_array('ROLE_EMPLOYEE', $employee->getRoles(), true)) {
+            throw $this->createNotFoundException('Cet utilisateur n’est pas un employé.');
+        }
+
+        $employee->setIsActive(!$employee->isActive());
+        $entityManager->flush();
+
+        $this->addFlash(
+            'success',
+            $employee->isActive()
+                ? 'Le compte employé a été réactivé.'
+                : 'Le compte employé a été désactivé.'
+        );
+
+        return $this->redirectToRoute('app_register');
+    }
+}
