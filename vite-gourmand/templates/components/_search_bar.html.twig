@@ -1,0 +1,6 @@
+{% include 'components/_search_bar.html.twig' with {
+    placeholder: 'Rechercher un client...',
+    searchValue: app.request.query.get('search'),
+    statuses: statuses,
+    currentStatus: app.request.query.get('status')
+} %}
