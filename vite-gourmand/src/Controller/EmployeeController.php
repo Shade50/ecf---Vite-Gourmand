@@ -23,15 +23,10 @@ final class EmployeeController extends AbstractController
         $search = trim((string) $request->query->get('search', ''));
         $status = trim((string) $request->query->get('status', ''));
 
-        /* premiere version simple :
-         * on affiche tous
-         * je brancherai la recherche et le filtre dans le repository plus tard
-         */
-
-        $orders = $orderRepository->findBy(
-            [],
-            ['createAt' => 'DESC']
-        );
+        $orders = $orderRepository->findForEmployee(
+    $search,
+    $status
+);
 
 
         return $this->render('employee/index.html.twig', [
