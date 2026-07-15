@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Order;
+use App\Entity\OrderStatusHistory;
 use App\Repository\OrderRepository;
 use App\Service\DeliveryFeeCalculator;
 use DateTimeImmutable;
@@ -77,6 +78,7 @@ final class EmployeeController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_EMPLOYER');
+        $oldStatus = $order->getStatus();
 
         // dd($request->request->all());
 
@@ -118,6 +120,20 @@ final class EmployeeController extends AbstractController
 
         $order->setStatus($newStatus);
 
+        $newStatus = $order->getStatus();
+
+        if ($oldStatus !== $newStatus) {
+            $history = new OrderStatusHistory();
+
+            $history->setCommande($order);
+            $history->setOldStatus($oldStatus);
+            $history->setNewStatus($newStatus);
+            $history->setChangedAt(new \DateTimeImmutable());
+            $history->setChangedBy($this->getUser());
+
+            $entityManager->persist($history);
+        }
+
         $entityManager->flush();
 
         $this->addFlash(
@@ -132,79 +148,167 @@ final class EmployeeController extends AbstractController
     }
 
     #[Route(
-    '/employee/commande/{id}/modifier',
-    name: 'app_employee_order_update',
-    methods: ['POST']
-)]
-public function updateOrder(
-    Order $order,
-    Request $request,
-    EntityManagerInterface $entityManager,
-    DeliveryFeeCalculator $deliveryFeeCalculator,
-): Response {
-    $this->denyAccessUnlessGranted('ROLE_EMPLOYER');
+        '/employee/commande/{id}/modifier',
+        name: 'app_employee_order_update',
+        methods: ['POST']
+    )]
+    public function updateOrder(
+        Order $order,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        DeliveryFeeCalculator $deliveryFeeCalculator,
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_EMPLOYER');
 
-    if (!$this->isCsrfTokenValid(
-        'update-order-' . $order->getId(),
-        (string) $request->request->get('_token')
-    )) {
-        throw $this->createAccessDeniedException(
-            'Jeton de sécurité invalide.'
-        );
-    }
 
-    /*
+        if (!$this->isCsrfTokenValid(
+            'update-order-' . $order->getId(),
+            (string) $request->request->get('_token')
+        )) {
+            throw $this->createAccessDeniedException(
+                'Jeton de sécurité invalide.'
+            );
+        }
+
+        /*
      * Une commande acceptée ne peut plus être
      * modifiée ou annulée.
      */
-    if ($order->getStatus() !== 'En attente') {
-        $this->addFlash(
-            'danger',
-            'Cette commande ne peut plus être modifiée ou annulée.'
+        if ($order->getStatus() !== 'En attente') {
+            $this->addFlash(
+                'danger',
+                'Cette commande ne peut plus être modifiée ou annulée.'
+            );
+
+            return $this->redirectToRoute(
+                'app_employee_order_show',
+                ['id' => $order->getId()]
+            );
+        }
+
+        $action = (string) $request->request->get('action');
+        $contactMode = trim(
+            (string) $request->request->get('contactMode')
+        );
+        $contactReason = trim(
+            (string) $request->request->get('contactReason')
         );
 
-        return $this->redirectToRoute(
-            'app_employee_order_show',
-            ['id' => $order->getId()]
-        );
-    }
+        if (!in_array($contactMode, ['Téléphone', 'E-mail'], true)) {
+            $this->addFlash(
+                'danger',
+                'Veuillez sélectionner le mode de contact utilisé.'
+            );
 
-    $action = (string) $request->request->get('action');
-    $contactMode = trim(
-        (string) $request->request->get('contactMode')
-    );
-    $contactReason = trim(
-        (string) $request->request->get('contactReason')
-    );
+            return $this->redirectToRoute(
+                'app_employee_order_show',
+                ['id' => $order->getId()]
+            );
+        }
 
-    if (!in_array($contactMode, ['Téléphone', 'E-mail'], true)) {
-        $this->addFlash(
-            'danger',
-            'Veuillez sélectionner le mode de contact utilisé.'
-        );
+        if ($contactReason === '') {
+            $this->addFlash(
+                'danger',
+                'Le motif de la modification ou de l’annulation est obligatoire.'
+            );
 
-        return $this->redirectToRoute(
-            'app_employee_order_show',
-            ['id' => $order->getId()]
-        );
-    }
+            return $this->redirectToRoute(
+                'app_employee_order_show',
+                ['id' => $order->getId()]
+            );
+        }
 
-    if ($contactReason === '') {
-        $this->addFlash(
-            'danger',
-            'Le motif de la modification ou de l’annulation est obligatoire.'
-        );
-
-        return $this->redirectToRoute(
-            'app_employee_order_show',
-            ['id' => $order->getId()]
-        );
-    }
-
-    /*
+        /*
      * ANNULATION
      */
-    if ($action === 'cancel') {
+        if ($action === 'cancel') {
+            $menu = $order->getMenu();
+
+            $minimumPerson = max(
+                1,
+                (int) $menu->getMinimumPerson()
+            );
+
+            $stockToRestore = (int) ceil(
+                $order->getNumberOfPeople() / $minimumPerson
+            );
+
+            $menu->setStock(
+                $menu->getStock() + $stockToRestore
+            );
+
+            $order->setStatus('Annulée');
+
+            $entityManager->flush();
+
+            $this->addFlash(
+                'success',
+                sprintf(
+                    'La commande a été annulée après contact par %s. Motif : %s',
+                    $contactMode,
+                    $contactReason
+                )
+            );
+
+            return $this->redirectToRoute('app_employee_index');
+        }
+
+        /*
+     * MODIFICATION
+     */
+        if ($action !== 'update') {
+            $this->addFlash(
+                'danger',
+                'Action inconnue.'
+            );
+
+            return $this->redirectToRoute(
+                'app_employee_order_show',
+                ['id' => $order->getId()]
+            );
+        }
+
+        $deliveryDateValue = trim(
+            (string) $request->request->get('deliveryDate')
+        );
+
+        $deliveryAddress = trim(
+            (string) $request->request->get('deliveryAdresse')
+        );
+
+        $numberOfPeople = (int) $request->request->get(
+            'numberOfPeople'
+        );
+
+        $deliveryDate = DateTimeImmutable::createFromFormat(
+            'Y-m-d\TH:i',
+            $deliveryDateValue
+        );
+
+        if ($deliveryDate === false) {
+            $this->addFlash(
+                'danger',
+                'La date de livraison est invalide.'
+            );
+
+            return $this->redirectToRoute(
+                'app_employee_order_show',
+                ['id' => $order->getId()]
+            );
+        }
+
+        if ($deliveryAddress === '') {
+            $this->addFlash(
+                'danger',
+                'L’adresse de livraison est obligatoire.'
+            );
+
+            return $this->redirectToRoute(
+                'app_employee_order_show',
+                ['id' => $order->getId()]
+            );
+        }
+
         $menu = $order->getMenu();
 
         $minimumPerson = max(
@@ -212,219 +316,130 @@ public function updateOrder(
             (int) $menu->getMinimumPerson()
         );
 
-        $stockToRestore = (int) ceil(
+        if ($numberOfPeople < $minimumPerson) {
+            $this->addFlash(
+                'danger',
+                sprintf(
+                    'Ce menu nécessite au minimum %d personnes.',
+                    $minimumPerson
+                )
+            );
+
+            return $this->redirectToRoute(
+                'app_employee_order_show',
+                ['id' => $order->getId()]
+            );
+        }
+
+        /*
+     * Ajustement du stock selon l’ancien et le nouveau
+     * nombre de personnes.
+     */
+        $oldStockQuantity = (int) ceil(
             $order->getNumberOfPeople() / $minimumPerson
         );
 
-        $menu->setStock(
-            $menu->getStock() + $stockToRestore
+        $newStockQuantity = (int) ceil(
+            $numberOfPeople / $minimumPerson
         );
 
-        $order->setStatus('Annulée');
+        $stockDifference = $newStockQuantity - $oldStockQuantity;
+
+        if (
+            $stockDifference > 0
+            && $menu->getStock() < $stockDifference
+        ) {
+            $this->addFlash(
+                'danger',
+                'Le stock disponible est insuffisant pour cette modification.'
+            );
+
+            return $this->redirectToRoute(
+                'app_employee_order_show',
+                ['id' => $order->getId()]
+            );
+        }
+
+        /*
+     * Nouveau calcul de livraison.
+     */
+        $coordinates = $deliveryFeeCalculator->geocodeAddress(
+            $deliveryAddress
+        );
+
+        if ($coordinates === null) {
+            $this->addFlash(
+                'danger',
+                'L’adresse de livraison est introuvable.'
+            );
+
+            return $this->redirectToRoute(
+                'app_employee_order_show',
+                ['id' => $order->getId()]
+            );
+        }
+
+        $distance = $deliveryFeeCalculator->calculateDistance(
+            $coordinates
+        );
+
+        if ($distance === null) {
+            $this->addFlash(
+                'danger',
+                'Impossible de calculer l’itinéraire de livraison.'
+            );
+
+            return $this->redirectToRoute(
+                'app_employee_order_show',
+                ['id' => $order->getId()]
+            );
+        }
+
+        $deliveryFee = $deliveryFeeCalculator->calculateDeliveryFee(
+            $distance
+        );
+
+        /*
+     * Nouveau calcul du prix.
+     */
+        $menuPrice = (float) $menu->getPrice();
+        $pricePerPerson = $menuPrice / $minimumPerson;
+        $mealPrice = $pricePerPerson * $numberOfPeople;
+
+        if ($numberOfPeople >= $minimumPerson + 5) {
+            $mealPrice *= 0.90;
+        }
+
+        $totalPrice = $mealPrice + $deliveryFee;
+
+        /*
+     * Enregistrement.
+     */
+        $menu->setStock(
+            $menu->getStock() - $stockDifference
+        );
+
+        $order->setDeliveryDate($deliveryDate);
+        $order->setNumberOfPeople($numberOfPeople);
+        $order->setDeliveryAdresse($deliveryAddress);
+        $order->setTotalPrice(
+            number_format($totalPrice, 2, '.', '')
+        );
 
         $entityManager->flush();
 
         $this->addFlash(
             'success',
             sprintf(
-                'La commande a été annulée après contact par %s. Motif : %s',
+                'La commande a été modifiée après contact par %s. Motif : %s',
                 $contactMode,
                 $contactReason
             )
         );
 
-        return $this->redirectToRoute('app_employee_index');
-    }
-
-    /*
-     * MODIFICATION
-     */
-    if ($action !== 'update') {
-        $this->addFlash(
-            'danger',
-            'Action inconnue.'
-        );
-
         return $this->redirectToRoute(
             'app_employee_order_show',
             ['id' => $order->getId()]
         );
     }
-
-    $deliveryDateValue = trim(
-        (string) $request->request->get('deliveryDate')
-    );
-
-    $deliveryAddress = trim(
-        (string) $request->request->get('deliveryAdresse')
-    );
-
-    $numberOfPeople = (int) $request->request->get(
-        'numberOfPeople'
-    );
-
-    $deliveryDate = DateTimeImmutable::createFromFormat(
-        'Y-m-d\TH:i',
-        $deliveryDateValue
-    );
-
-    if ($deliveryDate === false) {
-        $this->addFlash(
-            'danger',
-            'La date de livraison est invalide.'
-        );
-
-        return $this->redirectToRoute(
-            'app_employee_order_show',
-            ['id' => $order->getId()]
-        );
-    }
-
-    if ($deliveryAddress === '') {
-        $this->addFlash(
-            'danger',
-            'L’adresse de livraison est obligatoire.'
-        );
-
-        return $this->redirectToRoute(
-            'app_employee_order_show',
-            ['id' => $order->getId()]
-        );
-    }
-
-    $menu = $order->getMenu();
-
-    $minimumPerson = max(
-        1,
-        (int) $menu->getMinimumPerson()
-    );
-
-    if ($numberOfPeople < $minimumPerson) {
-        $this->addFlash(
-            'danger',
-            sprintf(
-                'Ce menu nécessite au minimum %d personnes.',
-                $minimumPerson
-            )
-        );
-
-        return $this->redirectToRoute(
-            'app_employee_order_show',
-            ['id' => $order->getId()]
-        );
-    }
-
-    /*
-     * Ajustement du stock selon l’ancien et le nouveau
-     * nombre de personnes.
-     */
-    $oldStockQuantity = (int) ceil(
-        $order->getNumberOfPeople() / $minimumPerson
-    );
-
-    $newStockQuantity = (int) ceil(
-        $numberOfPeople / $minimumPerson
-    );
-
-    $stockDifference = $newStockQuantity - $oldStockQuantity;
-
-    if (
-        $stockDifference > 0
-        && $menu->getStock() < $stockDifference
-    ) {
-        $this->addFlash(
-            'danger',
-            'Le stock disponible est insuffisant pour cette modification.'
-        );
-
-        return $this->redirectToRoute(
-            'app_employee_order_show',
-            ['id' => $order->getId()]
-        );
-    }
-
-    /*
-     * Nouveau calcul de livraison.
-     */
-    $coordinates = $deliveryFeeCalculator->geocodeAddress(
-        $deliveryAddress
-    );
-
-    if ($coordinates === null) {
-        $this->addFlash(
-            'danger',
-            'L’adresse de livraison est introuvable.'
-        );
-
-        return $this->redirectToRoute(
-            'app_employee_order_show',
-            ['id' => $order->getId()]
-        );
-    }
-
-    $distance = $deliveryFeeCalculator->calculateDistance(
-        $coordinates
-    );
-
-    if ($distance === null) {
-        $this->addFlash(
-            'danger',
-            'Impossible de calculer l’itinéraire de livraison.'
-        );
-
-        return $this->redirectToRoute(
-            'app_employee_order_show',
-            ['id' => $order->getId()]
-        );
-    }
-
-    $deliveryFee = $deliveryFeeCalculator->calculateDeliveryFee(
-        $distance
-    );
-
-    /*
-     * Nouveau calcul du prix.
-     */
-    $menuPrice = (float) $menu->getPrice();
-    $pricePerPerson = $menuPrice / $minimumPerson;
-    $mealPrice = $pricePerPerson * $numberOfPeople;
-
-    if ($numberOfPeople >= $minimumPerson + 5) {
-        $mealPrice *= 0.90;
-    }
-
-    $totalPrice = $mealPrice + $deliveryFee;
-
-    /*
-     * Enregistrement.
-     */
-    $menu->setStock(
-        $menu->getStock() - $stockDifference
-    );
-
-    $order->setDeliveryDate($deliveryDate);
-    $order->setNumberOfPeople($numberOfPeople);
-    $order->setDeliveryAdresse($deliveryAddress);
-    $order->setTotalPrice(
-        number_format($totalPrice, 2, '.', '')
-    );
-
-    $entityManager->flush();
-
-    $this->addFlash(
-        'success',
-        sprintf(
-            'La commande a été modifiée après contact par %s. Motif : %s',
-            $contactMode,
-            $contactReason
-        )
-    );
-
-    return $this->redirectToRoute(
-        'app_employee_order_show',
-        ['id' => $order->getId()]
-    );
-}
-
-
 }
