@@ -91,11 +91,25 @@ final class ProfileController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
-        // Vérification utilisateur
-        // Vérification du statut
-        // Formulaire de modification
-        // Recalcul du prix
-        // Ajustement du stock si le nombre de personnes change
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($order->getUser() !== $user) {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez pas modifier cette commande.'
+            );
+        }
+
+        $this->addFlash(
+            'info',
+            'La modification de la commande va maintenant être mise en place.'
+        );
+
+        return $this->redirectToRoute('app_profile_order_detail', [
+            'id' => $order->getId(),
+        ]);
     }
 
     #[Route(
@@ -109,11 +123,22 @@ final class ProfileController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
-        // Vérification utilisateur
-        // Vérification CSRF
-        // Vérification du statut
-        // Passage au statut annulé
-        // Réincrémentation du stock
-        // Ajout dans l’historique des statuts
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($order->getUser() !== $user) {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez pas annuler cette commande.'
+            );
+        }
+
+        $this->addFlash(
+            'info',
+            'L’annulation de la commande va maintenant être mise en place.'
+        );
+
+        return $this->redirectToRoute('app_profile');
     }
 }
