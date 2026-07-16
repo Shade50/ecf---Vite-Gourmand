@@ -1,25 +1,64 @@
-
 services:
 ###> doctrine/doctrine-bundle ###
   database:
-    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    image: mysql:8.4
+    container_name: vite_gourmand_mysql
+    restart: unless-stopped
+
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
-    healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
-      timeout: 5s
-      retries: 5
-      start_period: 60s
+      MYSQL_DATABASE: vite_gourmand
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+
+    ports:
+      - "3307:3306"
+
     volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
+      - database:/var/lib/mysql
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h localhost -u root -proot --silent"
+        ]
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 ###< doctrine/doctrine-bundle ###
+
+  mongodb:
+    image: mongodb/mongodb-community-server:7.0-ubi9-slim
+    container_name: vite_gourmand_mongodb
+    restart: unless-stopped
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongodb:/data/db
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+
+    container_name: vite_gourmand_php
+    restart: unless-stopped
+    working_dir: /var/www/app
+
+    volumes:
+      - ./:/var/www/app
+
+    depends_on:
+      database:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
 
 volumes:
 ###> doctrine/doctrine-bundle ###
-  database_data:
+  database:
 ###< doctrine/doctrine-bundle ###
+  mongodb:

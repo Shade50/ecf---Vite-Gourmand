@@ -306,94 +306,94 @@ final class ProfileController extends AbstractController
     }
 
     #[Route(
-    '/profile/commande/{id}/annuler',
-    name: 'app_profile_order_cancel',
-    requirements: ['id' => '\d+'],
-    methods: ['POST']
-)]
-public function cancelOrder(
-    Order $order,
-    Request $request,
-    EntityManagerInterface $entityManager,
-    MailService $mailService
-): Response {
-    $this->denyAccessUnlessGranted('ROLE_USER');
+        '/profile/commande/{id}/annuler',
+        name: 'app_profile_order_cancel',
+        requirements: ['id' => '\d+'],
+        methods: ['POST']
+    )]
+    public function cancelOrder(
+        Order $order,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        MailService $mailService
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
-    /** @var User $user */
-    $user = $this->getUser();
+        /** @var User $user */
+        $user = $this->getUser();
 
-    if ($order->getUser() !== $user) {
-        throw $this->createAccessDeniedException(
-            'Vous ne pouvez pas annuler cette commande.'
-        );
-    }
+        if ($order->getUser() !== $user) {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez pas annuler cette commande.'
+            );
+        }
 
-    if (!$this->isCsrfTokenValid(
-        'cancel-order-' . $order->getId(),
-        (string) $request->request->get('_token')
-    )) {
-        throw $this->createAccessDeniedException(
-            'Jeton de sécurité invalide.'
-        );
-    }
+        if (!$this->isCsrfTokenValid(
+            'cancel-order-' . $order->getId(),
+            (string) $request->request->get('_token')
+        )) {
+            throw $this->createAccessDeniedException(
+                'Jeton de sécurité invalide.'
+            );
+        }
 
-    /*
+        /*
      * Une commande qui n’est plus en attente
      * ne peut plus être annulée.
      */
-    if ($order->getStatus() !== 'En attente') {
-        $this->addFlash(
-            'danger',
-            'Cette commande ne peut plus être annulée.'
+        if ($order->getStatus() !== 'En attente') {
+            $this->addFlash(
+                'danger',
+                'Cette commande ne peut plus être annulée.'
+            );
+
+            return $this->redirectToRoute(
+                'app_profile_order_detail',
+                ['id' => $order->getId()]
+            );
+        }
+
+        $oldStatus = $order->getStatus();
+        $menu = $order->getMenu();
+
+        $minimumPerson = max(
+            1,
+            (int) $menu->getMinimumPerson()
         );
 
-        return $this->redirectToRoute(
-            'app_profile_order_detail',
-            ['id' => $order->getId()]
-        );
-    }
-
-    $oldStatus = $order->getStatus();
-    $menu = $order->getMenu();
-
-    $minimumPerson = max(
-        1,
-        (int) $menu->getMinimumPerson()
-    );
-
-    /*
+        /*
      * Remise en stock de la quantité réservée.
      */
-    $stockToRestore = (int) ceil(
-        $order->getNumberOfPeople() / $minimumPerson
-    );
+        $stockToRestore = (int) ceil(
+            $order->getNumberOfPeople() / $minimumPerson
+        );
 
-    $menu->setStock(
-        $menu->getStock() + $stockToRestore
-    );
+        $menu->setStock(
+            $menu->getStock() + $stockToRestore
+        );
 
-    $order->setStatus('Annulée');
+        $order->setStatus('Annulée');
 
-    /*
+        /*
      * Historique du changement de statut.
      */
-    $history = new OrderStatusHistory();
+        $history = new OrderStatusHistory();
 
-    $history->setCommande($order);
-    $history->setOldStatus($oldStatus);
-    $history->setNewStatus('Annulée');
-    $history->setChangedAt(new DateTimeImmutable());
-    $history->setChangedBy($user);
+        $history->setCommande($order);
+        $history->setOldStatus($oldStatus);
+        $history->setNewStatus('Annulée');
+        $history->setChangedAt(new DateTimeImmutable());
+        $history->setChangedBy($user);
 
-    $entityManager->persist($history);
-    $entityManager->flush();
-    $mailService->sendOrderCancelled($order);
+        $entityManager->persist($history);
+        $entityManager->flush();
+        $mailService->sendOrderCancelled($order);
 
-    $this->addFlash(
-        'success',
-        'Votre commande a bien été annulée.'
-    );
+        $this->addFlash(
+            'success',
+            'Votre commande a bien été annulée.'
+        );
 
-    return $this->redirectToRoute('app_profile');
-}
+        return $this->redirectToRoute('app_profile');
+    }
 }
