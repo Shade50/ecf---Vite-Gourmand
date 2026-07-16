@@ -36,7 +36,7 @@ final class ProfileController extends AbstractController
 
             $plainPassword = $form->get('plainPassword')->getData();
 
-            if ($plainPassword){
+            if ($plainPassword) {
                 $user->setPassword(
                     $userPassword->hashPassword($user, $plainPassword)
                 );
@@ -56,24 +56,64 @@ final class ProfileController extends AbstractController
 
         ]);
     }
-    #[route('/profil/commande/{id}',
+    #[route(
+        '/profil/commande/{id}',
         name: 'app_profile_order_detail',
-        requirements:['id' => '\d+'],
-        methods: ['get'])]
-        public function orderDetail(order $order): Response
-        {
-            $this->denyAccessUnlessGranted('ROLE_USER');
+        requirements: ['id' => '\d+'],
+        methods: ['get']
+    )]
+    public function orderDetail(order $order): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
-            /** @var User $user */
-            $user = $this->getUser();
+        /** @var User $user */
+        $user = $this->getUser();
 
-            if ($order->getUser() != $user){
-                throw $this->createAccessDeniedException(
-                    'Vous ne pouvez pas consulter cette commande.');
-            }
-        
-            return $this->render('profile/order_detail.html.twig',[
-                'order' => $order,
-                ]);
+        if ($order->getUser() != $user) {
+            throw $this->createAccessDeniedException(
+                'Vous ne pouvez pas consulter cette commande.'
+            );
         }
+
+        return $this->render('profile/order_detail.html.twig', [
+            'order' => $order,
+        ]);
+    }
+
+    #[Route(
+        '/profile/commande/{id}/modifier',
+        name: 'app_profile_order_edit',
+        requirements: ['id' => '\d+'],
+        methods: ['GET', 'POST']
+    )]
+    public function editOrder(
+        Order $order,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        // Vérification utilisateur
+        // Vérification du statut
+        // Formulaire de modification
+        // Recalcul du prix
+        // Ajustement du stock si le nombre de personnes change
+    }
+
+    #[Route(
+        '/profile/commande/{id}/annuler',
+        name: 'app_profile_order_cancel',
+        requirements: ['id' => '\d+'],
+        methods: ['POST']
+    )]
+    public function cancelOrder(
+        Order $order,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        // Vérification utilisateur
+        // Vérification CSRF
+        // Vérification du statut
+        // Passage au statut annulé
+        // Réincrémentation du stock
+        // Ajout dans l’historique des statuts
+    }
 }

@@ -27,7 +27,7 @@
 			<table class="table table-striped align-middle">
 				<thead>
 					<tr>
-                        <th>n° commande</th>
+						<th>n° commande</th>
 						<th>Menu</th>
 						<th>Date de livraison</th>
 						<th>Personnes</th>
@@ -39,7 +39,7 @@
 				<tbody>
 					{% for order in orders %}
 						<tr>
-                            <td>{{ order.id}}
+							<td>{{ order.id}}</td>
 							<td>{{ order.menu.title }}</td>
 							<td>{{ order.deliveryDate|date('d/m/y à H:i') }}</td>
 							<td>{{ order.numberOfPeople }}</td>
@@ -47,9 +47,22 @@
 								€</td>
 							<td>{{ order.status }}</td>
 							<td>
-								<a href="{{ path('app_profile_order_detail', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary">
-									Voir le détail
+
+								<a href="{{ path('app_profile_order_edit', {'id': order.id}) }}" class="btn btn-sm btn-warning">
+									Modifier
 								</a>
+
+								<form method="post" action="{{ path('app_profile_order_cancel', {'id': order.id}) }}" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment annuler cette commande ?');">
+
+									<input type="hidden" name="_token" value="{{ csrf_token('cancel-order-' ~ order.id) }}">
+
+									<button type="submit" class="btn btn-sm btn-danger">
+										Annuler
+									</button>
+								</form>
+								{# <a href="{{ path('app_profile_order_detail', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary">
+																	Voir le détail
+																</a> #}
 							</td>
 						</tr>
 					{% endfor %}
