@@ -9,10 +9,18 @@
 		<div class="row g-4 justify-content-center">
 
 			{% include 'admin/components/_admin_setting.html.twig' %}
-            {% include 'admin/components/_admin_menu.html.twig' %}
-			{% include 'admin/components/_admin_order.html.twig' %}
+			{% include 'admin/components/_admin_menu.html.twig' %}
+
+			{% include './employee/components/_employer_commande.html.twig' with {
+    			title: 'Commandes',
+    			description: 'Voir et modifier les commandes',
+    			route: 'app_employee_orders',
+    			buttonLabel: 'Gérer les commandes'
+				} %}
+
+			{# {% include 'admin/components/_admin_order.html.twig' %} #}
 			{% include 'admin/components/_admin_create_employee.html.twig' %}
-			
+
 
 		</div>
 	</div>

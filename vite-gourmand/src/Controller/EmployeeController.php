@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class EmployeeController extends AbstractController
 {
-    #[Route('/employee', name: 'app_employee_index', methods: ['GET'])]
+    #[Route('/employee/orders', name: 'app_employee_orders', methods: ['GET'])]
     public function index(
         Request $request,
         OrderRepository $orderRepository,
@@ -37,7 +37,7 @@ final class EmployeeController extends AbstractController
         );
 
 
-        return $this->render('employee/index.html.twig', [
+        return $this->render('employee/show_commande.html.twig', [
             'orders' => $orders,
             'search' => $search,
             'currentStatus' => $status,
@@ -51,6 +51,45 @@ final class EmployeeController extends AbstractController
                 'Annulée'
             ],
         ]);
+    }
+
+    // #[Route('/employee', name: 'app_employee_index', methods: ['GET'])]
+    // public function index(
+    //     Request $request,
+    //     OrderRepository $orderRepository,
+    // ): Response {
+    //     $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
+
+    //     $search = trim((string) $request->query->get('search', ''));
+    //     $status = trim((string) $request->query->get('status', ''));
+
+    //     $orders = $orderRepository->findForEmployee(
+    //         $search,
+    //         $status
+    //     );
+
+
+    //     return $this->render('employee/index.html.twig', [
+    //         'orders' => $orders,
+    //         'search' => $search,
+    //         'currentStatus' => $status,
+    //         'statuses' => [
+    //             'En attente',
+    //             'Acceptée',
+    //             'en préparation',
+    //             'En cours de livraison',
+    //             'En attente du retour de matériel',
+    //             'Terminée',
+    //             'Annulée'
+    //         ],
+    //     ]);
+    // }
+
+    #[Route('/employee', name: 'app_employee_index')]
+    public function orders(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
+        return $this->render('employee/index.html.twig');
     }
 
     #[Route(
