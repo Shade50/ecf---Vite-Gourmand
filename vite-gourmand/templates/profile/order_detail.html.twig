@@ -15,9 +15,46 @@
 			</a>
 		</div>
 
+		{% for label, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+					{{ message }}
+
+					<button
+						type="button"
+						class="btn-close"
+						data-bs-dismiss="alert"
+						aria-label="Fermer">
+					</button>
+				</div>
+			{% endfor %}
+		{% endfor %}
+
 		<div class="card shadow-sm">
-			<div class="card-header">
+			<div class="card-header d-flex justify-content-between align-items-center">
 				<strong>Commande n°{{ order.id }}</strong>
+
+				{% if order.status == 'En attente' %}
+					<span class="badge bg-warning text-dark">
+						En attente
+					</span>
+				{% elseif order.status == 'Acceptée' %}
+					<span class="badge bg-success">
+						Acceptée
+					</span>
+				{% elseif order.status == 'Annulée' %}
+					<span class="badge bg-danger">
+						Annulée
+					</span>
+				{% elseif order.status == 'Terminée' %}
+					<span class="badge bg-secondary">
+						Terminée
+					</span>
+				{% else %}
+					<span class="badge bg-info text-dark">
+						{{ order.status }}
+					</span>
+				{% endif %}
 			</div>
 
 			<div class="card-body">
@@ -42,19 +79,149 @@
 					</div>
 				</div>
 
-				<div class="row mb-3">
-					<div class="col-md-6">
-						<strong>Nombre de personnes :</strong>
+				{% if order.status == 'En attente' %}
+
+					<hr class="my-4">
+
+					<h2 class="h4 mb-4">
+						Modifier la commande
+					</h2>
+
+					<form
+						method="post"
+						action="{{ path('app_profile_order_edit', {'id': order.id}) }}">
+
+						<input
+							type="hidden"
+							name="_token"
+							value="{{ csrf_token('update-order-' ~ order.id) }}">
+
+						<div class="mb-3">
+							<label for="numberOfPeople" class="form-label">
+								Nombre de personnes
+							</label>
+
+							<input
+								type="number"
+								id="numberOfPeople"
+								name="numberOfPeople"
+								class="form-control"
+								value="{{ order.numberOfPeople }}"
+								min="{{ order.menu.minimumPerson }}"
+								required>
+
+							<div class="form-text">
+								Minimum :
+								{{ order.menu.minimumPerson }}
+								personnes.
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label for="deliveryDate" class="form-label">
+								Date et heure de livraison
+							</label>
+
+							<input
+								type="datetime-local"
+								id="deliveryDate"
+								name="deliveryDate"
+								class="form-control"
+								value="{% if order.deliveryDate %}{{ order.deliveryDate|date('Y-m-d\\TH:i') }}{% endif %}"
+								required>
+						</div>
+
+						<div class="mb-4">
+							<label for="deliveryAdresse" class="form-label">
+								Adresse de livraison
+							</label>
+
+							<input
+								type="text"
+								id="deliveryAdresse"
+								name="deliveryAdresse"
+								class="form-control"
+								value="{{ order.deliveryAdresse }}"
+								required>
+						</div>
+
+						<button type="submit" class="btn btn-primary">
+							Enregistrer les modifications
+						</button>
+					</form>
+
+					<hr class="my-4">
+
+					<h2 class="h4 text-danger">
+						Annuler la commande
+					</h2>
+
+					<p class="text-muted">
+						L’annulation est définitive. Le stock réservé sera remis à disposition.
+					</p>
+
+					<form
+						method="post"
+						action="{{ path('app_profile_order_cancel', {'id': order.id}) }}"
+						onsubmit="return confirm('Voulez-vous vraiment annuler cette commande ?');">
+
+						<input
+							type="hidden"
+							name="_token"
+							value="{{ csrf_token('cancel-order-' ~ order.id) }}">
+
+						<button type="submit" class="btn btn-danger">
+							Annuler la commande
+						</button>
+					</form>
+
+				{% else %}
+
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<strong>Nombre de personnes :</strong>
+						</div>
+
+						<div class="col-md-6">
+							{{ order.numberOfPeople }}
+						</div>
 					</div>
 
-					<div class="col-md-6">
-						{{ order.numberOfPeople }}
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<strong>Date de livraison :</strong>
+						</div>
+
+						<div class="col-md-6">
+							{% if order.deliveryDate %}
+								{{ order.deliveryDate|date('d/m/Y à H:i') }}
+							{% else %}
+								Non renseignée
+							{% endif %}
+						</div>
 					</div>
-				</div>
+
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<strong>Adresse de livraison :</strong>
+						</div>
+
+						<div class="col-md-6">
+							{{ order.deliveryAdresse ?: 'Non renseignée' }}
+						</div>
+					</div>
+
+					<div class="alert alert-secondary mt-4">
+						Cette commande ne peut plus être modifiée ou annulée.
+					</div>
+
+				{% endif %}
+
+				<hr class="my-4">
 
 				<div class="row mb-3">
 					<div class="col-md-6">
-						<strong>Prix total :</strong>
+						<strong>Prix total actuel :</strong>
 					</div>
 
 					<div class="col-md-6">
@@ -63,63 +230,13 @@
 					</div>
 				</div>
 
-				<div class="row mb-3">
-					<div class="col-md-6">
-						<strong>Date de livraison :</strong>
-					</div>
-
-					<div class="col-md-6">
-						{% if order.deliveryDate %}
-							{{ order.deliveryDate|date('d/m/Y à H:i') }}
-						{% else %}
-							Non renseignée
-						{% endif %}
-					</div>
-				</div>
-
-				<div class="row mb-3">
-					<div class="col-md-6">
-						<strong>Adresse de livraison :</strong>
-					</div>
-
-					<div class="col-md-6">
-						{{ order.deliveryAdresse ?: 'Non renseignée' }}
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-md-6">
-						<strong>Statut :</strong>
-						<div class="text-muted">
-							Commande enregistrée
-						</div>
-					</div>
-
-					<div class="col-md-6">
-						{% if order.status == 'en_attente' %}
-							<span class="badge bg-warning text-dark">
-								En attente
-							</span>
-						{% elseif order.status == 'validee' %}
-							<span class="badge bg-success">
-								Validée
-							</span>
-						{% elseif order.status == 'annulee' %}
-							<span class="badge bg-danger">
-								Annulée
-							</span>
-						{% else %}
-							<span class="badge bg-secondary">
-								{{ order.status|replace({'_': ' '})|capitalize }}
-							</span>
-						{% endif %}
-					</div>
-				</div>
 				<hr class="my-4">
 
-				{{ include('components/_order_status_history.html.twig', {order: order}) }}
+				{{ include(
+					'components/_order_status_history.html.twig',
+					{order: order}
+				) }}
 
-				
 			</div>
 		</div>
 
