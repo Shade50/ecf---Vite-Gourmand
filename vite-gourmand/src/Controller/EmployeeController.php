@@ -6,6 +6,7 @@ use App\Entity\Order;
 use App\Entity\OrderStatusHistory;
 use App\Repository\OrderRepository;
 use App\Service\DeliveryFeeCalculator;
+use App\Service\MailService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -115,6 +116,7 @@ final class EmployeeController extends AbstractController
         Order $order,
         Request $request,
         EntityManagerInterface $entityManager,
+        MailService $mailService,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
         $oldStatus = $order->getStatus();
@@ -175,6 +177,15 @@ final class EmployeeController extends AbstractController
 
         $entityManager->flush();
 
+        if ($newStatus === 'Acceptée') {
+            $mailService->sendOrderAccepted($order);
+        }
+
+        if ($newStatus === 'Terminée') {
+            $mailService->sendOrderFinished($order);
+            $mailService->sendReviewRequest($order);
+        }
+
         $this->addFlash(
             'success',
             'Le statut de la commande a bien été modifié.'
@@ -196,6 +207,7 @@ final class EmployeeController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         DeliveryFeeCalculator $deliveryFeeCalculator,
+        MailService $mailService,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
 
@@ -279,6 +291,7 @@ final class EmployeeController extends AbstractController
             $order->setStatus('Annulée');
 
             $entityManager->flush();
+            $mailService->sendOrderCancelled($order);
 
             $this->addFlash(
                 'success',
@@ -466,6 +479,8 @@ final class EmployeeController extends AbstractController
         );
 
         $entityManager->flush();
+
+        $mailService->sendOrderUpdated($order);
 
         $this->addFlash(
             'success',
