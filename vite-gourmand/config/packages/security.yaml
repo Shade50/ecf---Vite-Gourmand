@@ -37,7 +37,7 @@ security:
 
     access_control:
     - { path: ^/admin/menu, roles: ROLE_EMPLOYEE }
-    - { path: ^/admin/plat, roles: ROLE_EMPLOYEE }
+    - { path: ^/admin/settings, roles: ROLE_EMPLOYEE }
     - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
