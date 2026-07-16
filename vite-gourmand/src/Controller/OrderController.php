@@ -7,11 +7,14 @@ use App\Entity\Order;
 use App\Entity\User;
 use App\Form\OrderType;
 use App\Service\DeliveryFeeCalculator;
+use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
+
 
 final class OrderController extends AbstractController
 {
@@ -21,6 +24,7 @@ final class OrderController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         DeliveryFeeCalculator $deliveryFeeCalculator,
+        MailService $mailService,
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -144,6 +148,7 @@ final class OrderController extends AbstractController
 
             $entityManager->persist($order);
             $entityManager->flush();
+            $mailService->sendOrderCreated($order);
 
             $this->addFlash(
                 'success',

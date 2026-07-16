@@ -7,6 +7,7 @@ use App\Entity\OrderStatusHistory;
 use App\Entity\User;
 use App\Form\ProfileType;
 use App\Service\DeliveryFeeCalculator;
+use App\Service\MailService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -93,7 +94,8 @@ final class ProfileController extends AbstractController
         Order $order,
         Request $request,
         EntityManagerInterface $entityManager,
-        DeliveryFeeCalculator $deliveryFeeCalculator
+        DeliveryFeeCalculator $deliveryFeeCalculator,
+        MailService $mailService
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -290,6 +292,7 @@ final class ProfileController extends AbstractController
         );
 
         $entityManager->flush();
+        $mailService->sendOrderUpdated($order);
 
         $this->addFlash(
             'success',
@@ -311,7 +314,8 @@ final class ProfileController extends AbstractController
 public function cancelOrder(
     Order $order,
     Request $request,
-    EntityManagerInterface $entityManager
+    EntityManagerInterface $entityManager,
+    MailService $mailService
 ): Response {
     $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -383,6 +387,7 @@ public function cancelOrder(
 
     $entityManager->persist($history);
     $entityManager->flush();
+    $mailService->sendOrderCancelled($order);
 
     $this->addFlash(
         'success',
