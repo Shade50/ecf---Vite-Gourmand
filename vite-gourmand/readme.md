@@ -9,18 +9,31 @@ de commander des menus préparés à partir de produits frais et livrés à domi
 
 # 📸 Captures d'écran
 
-À compléter avec :
+# 📸 Captures d’écran
 
-<p align="center">
-    <img src="docs/images/acceuil.png" width="33%">
-    <img src="docs/images/catalogue.png" width="33%">
-    <img src="docs/images/dashboard_admin.png" width="33%">
-</p>
-<p align="center">
-    <img src="docs/images/dashboard_employer.png" width="33%">
-    <img src="docs/images/profil_admin.png" width="33%">
-    <img src="docs/images/stat_admin.png" width="33%">
-</p>
+## Accueil
+
+![Page d’accueil](docs/images/accueil.png)
+
+## Catalogue des menus
+
+![Catalogue](docs/images/catalogue.png)
+
+## Profil administrateur
+
+![Profil administrateur](docs/images/profil_admin.png)
+
+## Tableau de bord administrateur
+
+![Tableau de bord administrateur](docs/images/dashboard_admin.png)
+
+## Statistiques MongoDB
+
+![Statistiques](docs/images/stat_admin.png)
+
+## Tableau de bord employé
+
+![Tableau de bord employé](docs/images/dashboard_employe.png)
 
 
 # 🚀 Fonctionnalités
@@ -28,7 +41,6 @@ de commander des menus préparés à partir de produits frais et livrés à domi
 ## Front Office
 
 - Consultation des menus
-- Détail des menus
 - Création d'un compte
 - Connexion utilisateur
 - Gestion du profil
