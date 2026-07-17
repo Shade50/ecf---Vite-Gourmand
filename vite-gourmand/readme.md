@@ -7,7 +7,6 @@ de commander des menus préparés à partir de produits frais et livrés à domi
 
 ---
 
-# 📸 Captures d'écran
 
 # 📸 Captures d’écran
 
