@@ -191,7 +191,7 @@ L'application est déployée sur :
 </p>
 <p align="center">
     <img src="docs/images/dashboard_employer.png" width="33%">
-    <img src="docs/images/profil.admin.png" width="33%">
+    <img src="docs/images/profil_admin.png" width="33%">
     <img src="docs/images/stat_admin.png" width="33%">
 </p>
 
