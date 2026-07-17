@@ -12,7 +12,7 @@ services:
       MYSQL_PASSWORD: app
 
     ports:
-      - "3307:3306"
+      - "127.0.0.1:3307:3306"
 
     volumes:
       - database:/var/lib/mysql
@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
 
     ports:
-      - "27017:27017"
+      - "127.0.0.1:27017:27017"
 
     volumes:
       - mongodb:/data/db
