@@ -7,6 +7,22 @@ de commander des menus préparés à partir de produits frais et livrés à domi
 
 ---
 
+# 📸 Captures d'écran
+
+À compléter avec :
+
+<p align="center">
+    <img src="docs/images/acceuil.png" width="33%">
+    <img src="docs/images/catalogue.png" width="33%">
+    <img src="docs/images/dashboard_admin.png" width="33%">
+</p>
+<p align="center">
+    <img src="docs/images/dashboard_employer.png" width="33%">
+    <img src="docs/images/profil_admin.png" width="33%">
+    <img src="docs/images/stat_admin.png" width="33%">
+</p>
+
+
 # 🚀 Fonctionnalités
 
 ## Front Office
@@ -180,27 +196,8 @@ L'application est déployée sur :
 
 ---
 
-# 📸 Captures d'écran
 
-À compléter avec :
 
-<p align="center">
-    <img src="docs/images/acceuil.png" width="33%">
-    <img src="docs/images/catalogue.png" width="33%">
-    <img src="docs/images/dashboard_admin.png" width="33%">
-</p>
-<p align="center">
-    <img src="docs/images/dashboard_employer.png" width="33%">
-    <img src="docs/images/profil_admin.png" width="33%">
-    <img src="docs/images/stat_admin.png" width="33%">
-</p>
-
-- Accueil
-- Catalogue
-- Profil utilisateur
-- Tableau de bord administrateur
-- Tableau de bord employé
-- Statistiques MongoDB
 
 ---
 
