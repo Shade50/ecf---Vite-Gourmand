@@ -1,0 +1,14 @@
+.git
+.github
+.idea
+.vscode
+
+var/cache
+var/log
+
+.env.local
+.env.*.local
+
+node_modules
+
+compose.override.yaml

@@ -39,6 +39,20 @@ services:
     volumes:
       - mongodb:/data/db
 
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+
+    container_name: vite_gourmand_nginx
+    restart: unless-stopped
+
+    ports:
+      - "8080:80"
+
+    depends_on:
+      - php
+
   php:
     build:
       context: .
@@ -48,8 +62,10 @@ services:
     restart: unless-stopped
     working_dir: /var/www/app
 
-    volumes:
-      - ./:/var/www/app
+    environment:
+      DATABASE_URL: "mysql://app:app@database:3306/vite_gourmand?serverVersion=8.4.0&charset=utf8mb4"
+      APP_MONGODB_URL: "mongodb://mongodb:27017"
+      APP_MONGODB_DB: "vite_gourmand_stats"
 
     depends_on:
       database:

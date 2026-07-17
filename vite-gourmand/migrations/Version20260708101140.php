@@ -20,12 +20,12 @@ final class Version20260708101140 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE site_settings CHANGE adress address VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE site_settings CHANGE address address VARCHAR(255) NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE site_settings CHANGE address adress VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE site_settings CHANGE address address VARCHAR(255) NOT NULL');
     }
 }

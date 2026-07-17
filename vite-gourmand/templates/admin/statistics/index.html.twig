@@ -1,0 +1,246 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques
+{% endblock %}
+
+{% block body %}
+	<div class="container py-4">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<div>
+				<h1 class="mb-1">Statistiques</h1>
+				<p class="text-muted mb-0">
+					Nombre de commandes et chiffre d'affaires par menu.
+				</p>
+			</div>
+
+			<a href="{{ path('app_admin') }}" class="btn btn-outline-secondary">
+				Retour au tableau de bord
+			</a>
+		</div>
+
+		<form method="get" class="card shadow-sm mb-4">
+			<div class="card-body">
+				<div class="row g-3 align-items-end">
+					<div class="col-md-4">
+						<label for="menu" class="form-label">Menu</label>
+
+						<select name="menu" id="menu" class="form-select">
+							<option value="">Tous les menus</option>
+
+							{% for menu in menus %}
+								<option value="{{ menu.id }}" {% if selectedMenuId is not null and selectedMenuId == menu.id %} selected {% endif %}>
+									{{ menu.title }}
+								</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<div class="col-md-3">
+						<label for="startDate" class="form-label">
+							Date de début
+						</label>
+
+						<input type="date" name="startDate" id="startDate" class="form-control" value="{{ startDate }}">
+					</div>
+
+					<div class="col-md-3">
+						<label for="endDate" class="form-label">
+							Date de fin
+						</label>
+
+						<input type="date" name="endDate" id="endDate" class="form-control" value="{{ endDate }}">
+					</div>
+
+					<div class="col-md-2 d-grid gap-2">
+						<button type="submit" class="btn btn-primary">
+							Filtrer
+						</button>
+
+						<a href="{{ path('app_admin_statistics') }}" class="btn btn-outline-secondary">
+							Réinitialiser
+						</a>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<div class="row g-4 mb-4">
+			<div class="col-lg-4">
+				<div class="card shadow-sm h-100">
+					<div class="card-body">
+						<p class="text-muted mb-2">
+							Chiffre d'affaires filtré
+						</p>
+
+						<p class="display-6 fw-bold mb-0">
+							{{ totalRevenue|number_format(2, ',', ' ') }}
+							€
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-8">
+				<div class="card shadow-sm h-100">
+					<div class="card-body">
+						<h2 class="h5 mb-3">
+							Nombre de commandes par menu
+						</h2>
+
+						<div style="height: 320px;">
+							<canvas id="ordersChart"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row g-4">
+			<div class="col-lg-6">
+				<div class="card shadow-sm h-100">
+					<div class="card-header">
+						<h2 class="h5 mb-0">
+							Commandes par menu
+						</h2>
+					</div>
+
+					<div class="table-responsive">
+						<table class="table table-striped align-middle mb-0">
+							<thead>
+								<tr>
+									<th>Menu</th>
+									<th class="text-end">Commandes</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								{% for statistic in ordersByMenu %}
+									<tr>
+										<td>{{ statistic.menuName }}</td>
+
+										<td class="text-end">
+											{{ statistic.ordersCount }}
+										</td>
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="2" class="text-center py-4">
+											Aucune statistique disponible.
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-6">
+				<div class="card shadow-sm h-100">
+					<div class="card-header">
+						<h2 class="h5 mb-0">
+							Chiffre d'affaires par menu
+						</h2>
+					</div>
+
+					<div class="table-responsive">
+						<table class="table table-striped align-middle mb-0">
+							<thead>
+								<tr>
+									<th>Menu</th>
+									<th class="text-end">Commandes</th>
+									<th class="text-end">Chiffre d'affaires</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								{% for statistic in revenueByMenu %}
+									<tr>
+										<td>{{ statistic.menuName }}</td>
+
+										<td class="text-end">
+											{{ statistic.ordersCount }}
+										</td>
+
+										<td class="text-end">
+											{{ statistic.revenue|number_format(2, ',', ' ') }}
+											€
+										</td>
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="3" class="text-center py-4">
+											Aucun chiffre d'affaires pour ces filtres.
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{# // <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		
+			// <script> #}
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<script>
+		function initializeOrdersChart() {
+const chartElement = document.getElementById('ordersChart');
+
+if (! chartElement || typeof Chart === 'undefined') {
+return;
+}
+
+const chartLabels = {{ ordersByMenu
+            |map(statistic => statistic.menuName)
+            |json_encode
+            |raw }};
+
+const chartValues = {{ ordersByMenu
+            |map(statistic => statistic.ordersCount)
+            |json_encode
+            |raw }};
+
+const existingChart = Chart.getChart(chartElement);
+
+if (existingChart) {
+existingChart.destroy();
+}
+
+new Chart(chartElement, {
+type: 'bar',
+data: {
+labels: chartLabels,
+datasets: [
+{
+label: 'Nombre de commandes',
+data: chartValues,
+borderWidth: 1
+}
+]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+scales: {
+y: {
+beginAtZero: true,
+ticks: {
+precision: 0
+}
+}
+}
+}
+});
+}
+
+document.addEventListener('DOMContentLoaded', initializeOrdersChart);
+document.addEventListener('turbo:load', initializeOrdersChart);
+	</script>
+
+	{% endblock %}

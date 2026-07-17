@@ -5,14 +5,13 @@ RUN apt-get update \
         git \
         unzip \
         libicu-dev \
-        libpq-dev \
         libzip-dev \
         pkg-config \
         libssl-dev \
     && docker-php-ext-install \
         intl \
         pdo \
-        pdo_pgsql \
+        pdo_mysql \
         zip \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb \
@@ -21,3 +20,18 @@ RUN apt-get update \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/app
+
+COPY composer.json composer.lock symfony.lock ./
+
+RUN composer install \
+    --no-interaction \
+    --prefer-dist \
+    --no-scripts
+
+COPY . /var/www/app
+
+RUN composer dump-autoload --optimize \
+    && mkdir -p var/cache var/log \
+    && chown -R www-data:www-data var
+
+CMD ["php-fpm"]

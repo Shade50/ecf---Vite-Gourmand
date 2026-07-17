@@ -92,6 +92,8 @@ public function settings(
     return $this->render('admin/settings.html.twig', [
         'settings' => $settings,
     ]);
+
+    
 }
 
     // #[Route('/admin/settings', name: 'app_admin_settings')]
