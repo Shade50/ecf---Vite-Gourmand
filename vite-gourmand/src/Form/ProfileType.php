@@ -22,8 +22,12 @@ class ProfileType extends AbstractType
         $builder
             ->add('email')
             ->add('nom')
-            ->add('prenom')
-            ->add('gsm')
+            ->add('prenom',null, [
+                'label' => 'Prénom'
+            ])
+            ->add('gsm', null,[
+                'label' => 'Télèphone'
+            ])
             ->add('adressePostale')
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
