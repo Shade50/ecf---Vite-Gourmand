@@ -53,7 +53,7 @@ services:
     working_dir: /var/www/app
 
     environment:
-      DATABASE_URL: "mysql://app:Admin%2F2026%2Fecf@database:3306/vite_gourmand?serverVersion=8.4.0&charset=utf8mb4"
+      DATABASE_URL: "mysql://app:Admin%%2F2026%%2Fecf@database:3306/vite_gourmand?serverVersion=8.4.0&charset=utf8mb4"
       APP_MONGODB_URL: "mongodb://mongodb:27017"
       APP_MONGODB_DB: "vite_gourmand_stats"
       MAILER_DSN: "smtp://mailer:1025"
