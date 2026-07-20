@@ -76,6 +76,8 @@ services:
 
     ports:
       - "8080:80"
+    volumes:
+      - ./public:/var/www/app/public:ro
 
     depends_on:
       php:
