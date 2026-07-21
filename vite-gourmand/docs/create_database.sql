@@ -44,11 +44,12 @@ CREATE TABLE `theme` (
 
 DROP TABLE IF EXISTS `plat`;
 CREATE TABLE `plat` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(150) NOT NULL,
-  `description` longtext NOT NULL,
-  `type` varchar(50) NOT NULL,
-  `regime` varchar(50) NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(150) NOT NULL,
+  `description` LONGTEXT NOT NULL,
+  `type` VARCHAR(50) NOT NULL,
+  `regime` VARCHAR(50) NOT NULL,
+  `photo` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -71,18 +72,18 @@ CREATE TABLE `user` (
 
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(150) NOT NULL,
-  `description` longtext NOT NULL,
-  `minimum_person` int NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `conditions` longtext,
-  `stock` int NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `theme_id` int NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(150) NOT NULL,
+  `description` LONGTEXT NOT NULL,
+  `minimum_person` INT NOT NULL,
+  `price` DECIMAL(10,2) NOT NULL,
+  `conditions` LONGTEXT DEFAULT NULL,
+  `stock` INT NOT NULL,
+  `theme_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_7D053A9359027487` (`theme_id`),
-  CONSTRAINT `FK_7D053A9359027487` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`)
+  CONSTRAINT `FK_7D053A9359027487`
+    FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `plat_allergene`;
