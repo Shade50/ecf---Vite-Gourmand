@@ -15,6 +15,10 @@ final class ContactController extends AbstractController
         Request $request,
         MailService $mailService
     ): Response {
+
+        if ($request->request->get('website')) {
+            throw $this->createNotFoundException();
+        }
         if ($request->isMethod('POST')) {
             $name = trim($request->request->getString('name'));
             $email = trim($request->request->getString('email'));

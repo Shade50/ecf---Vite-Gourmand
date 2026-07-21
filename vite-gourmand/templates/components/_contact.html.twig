@@ -1,86 +1,127 @@
-
-<div class="container mt-5 ">
-    {# partie haute du component contact #}
+<div
+	class="container mt-5">
+	{# Partie haute du composant contact #}
 	<div class="row">
-        <div class="col-md-12 text-center justify-content-center">
-		    <h1 class="mb-3">Contactez-nous</h1>
-		    <p class="d-flex justify-content-center">
-			    Une question ? Un devis ? Une commande de groupe ?
-			</p>  
+		<div class="col-md-12 text-center justify-content-center">
+			<h1 class="mb-3">Contactez-nous</h1>
+
+			<p class="d-flex justify-content-center">
+				Une question ? Un devis ? Une commande de groupe ?
+			</p>
+
 			<p>
-                <span class="red-text">Nous somme à votre écoute !</span>
-            </p>
-		    
-            <hr class="separator mx-auto">
-            
-        </div>
+				<span class="red-text">Nous sommes à votre écoute !</span>
+			</p>
+
+			<hr class="separator mx-auto">
+		</div>
 	</div>
-    {# partie des cards du component contact #}
-	<div class="row justify-content-center ">
-        {# partie de la card Nos coordonnées du component contact #}
+
+	{# Partie des cards #}
+	<div
+		class="row justify-content-center">
+
+		{# Card coordonnées #}
 		<div class="col-md-5 form-contact">
-			<h4 class="red-text"><i class="bi bi-person-vcard me-2"></i>Nos coordonnées</h4>
+
+			<h4 class="red-text">
+				<i class="bi bi-person-vcard me-2"></i>
+				Nos coordonnées
+			</h4>
+
 			<hr class="separator">
+
 			<p>
 				<i class="bi bi-phone me-2 red-text"></i>
-				<span class="fw-bold">Téléphone :</span> {{site_settings().Phone}}
+				<span class="fw-bold">Téléphone :</span>
+				{{ site_settings().Phone }}
 			</p>
+
 			<p>
 				<i class="bi bi-envelope me-2 red-text"></i>
-				<span class="fw-bold">Email :</span> {{site_settings().Email}}
+				<span class="fw-bold">Email :</span>
+				{{ site_settings().Email }}
 			</p>
+
 			<p>
 				<i class="bi bi-geo-alt me-2 red-text"></i>
-				<span class="fw-bold">Adresse :</span> {{site_settings().Address}}, {{site_settings().PostalCode}} {{site_settings().City}}
+				<span class="fw-bold">Adresse :</span>
+				{{ site_settings().Address }},
+				{{ site_settings().PostalCode }}
+				{{ site_settings().City }}
 			</p>
-			<p>
-				<i class="bi bi-clock me-2 red-text"></i>
-				Nos horaires d'ouverture :
 
-                <div class="horaires-contact">
-                    <p>				 
-				    <span class="fw-bold">Lundi au vendredi :</span></br>
-                    {{site_settings().OpeningHoursWeekdays}}
-				<br>
-				    <span class="fw-bold">Samedi :</span> </br>
-                    {{site_settings().OpeningHoursSaturday}}
-				<br>
-				    <span class="fw-bold">Dimanche :</span> {{site_settings().OpeningHoursSunday}}
-                </p>
-                </div>
-                
-			</p>
+			<div class="mb-3">
+				<p>
+					<i class="bi bi-clock me-2 red-text"></i>
+					<span class="fw-bold">Nos horaires d'ouverture :</span>
+				</p>
+
+				<div class="horaires-contact">
+					<p>
+						<span class="fw-bold">Lundi au vendredi :</span><br>
+						{{ site_settings().OpeningHoursWeekdays }}
+					</p>
+
+					<p>
+						<span class="fw-bold">Samedi :</span><br>
+						{{ site_settings().OpeningHoursSaturday }}
+					</p>
+
+					<p>
+						<span class="fw-bold">Dimanche :</span><br>
+						{{ site_settings().OpeningHoursSunday }}
+					</p>
+				</div>
+			</div>
 
 		</div>
 
+		{# Card formulaire #}
 		<div class="col-md-5 row justify-content-center form-contact">
-            {# partie formulaire de la card Nos coordonnées du component contact #}
-            <div>
-			    <h4 class="red-text"><i class="bi bi-envelope me-2"></i>Envoyer-nous un message</h4>
-                <hr class="separator">
-            </div>
+
+			<div>
+				<h4 class="red-text">
+					<i class="bi bi-envelope me-2"></i>
+					Envoyez-nous un message
+				</h4>
+
+				<hr class="separator">
+			</div>
+
 			<form action="{{ path('app_contact') }}" method="post">
 
-				<div class="row ">
+				<div class="row">
+
 					<div class="mb-3 col-md-6">
-						<input type="text" class="form-control" placeholder="Votre nom" id="name" name="name" required>
+						<input type="text" class="form-control" id="name" name="name" placeholder="Votre nom" required>
 					</div>
 
 					<div class="mb-3 col-md-6">
-						<input type="email" class="form-control" placeholder="Votre email" id="email" name="email" required>
+						<input type="email" class="form-control" id="email" name="email" placeholder="Votre email" required>
 					</div>
+
 				</div>
 
 				<div class="mb-3">
-					<input type="text" class="form-control" placeholder="Sujet de votre message" id="subject" name="subject" required>
+					<input type="text" class="form-control" id="subject" name="subject" placeholder="Sujet de votre message" required>
 				</div>
 
 				<div class="mb-3">
-					<textarea class="form-control" placeholder="Votre message" id="message" name="message" rows="4" required></textarea>
+					<textarea class="form-control" id="message" name="message" rows="4" placeholder="Votre message" required></textarea>
 				</div>
+
+				{# Honeypot anti-spam #}
+				<div class="d-none">
+					<input type="text" name="website" tabindex="-1" autocomplete="off">
+				</div>
+
 				<div class="d-flex justify-content-center">
-					<button type="submit" class="btn btn-color">Envoyer</button>
+					<button type="submit" class="btn btn-color">
+						Envoyer
+					</button>
 				</div>
+
 			</form>
 
 		</div>
