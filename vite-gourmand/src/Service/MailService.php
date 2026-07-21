@@ -9,8 +9,8 @@ use Symfony\Component\Mime\Email;
 final class MailService
 {
     public function __construct(
-            private readonly MailerInterface $mailer
-        ) {}
+        private readonly MailerInterface $mailer
+    ) {}
 
     private function sendMail(
         Order $order,
@@ -26,7 +26,7 @@ final class MailService
         $this->mailer->send($email);
     }
 
-    
+
 
     public function sendOrderCreated(Order $order): void
     {
@@ -47,7 +47,7 @@ final class MailService
         );
     }
 
-    public function sendOrderUpdated(Order $order): void 
+    public function sendOrderUpdated(Order $order): void
     {
         $this->sendMail(
             $order,
@@ -66,7 +66,7 @@ final class MailService
         );
     }
 
-    public function sendOrderCancelled(Order $order): void 
+    public function sendOrderCancelled(Order $order): void
     {
         $this->sendMail(
             $order,
@@ -85,7 +85,7 @@ final class MailService
         );
     }
 
-    public function sendOrderAccepted(Order $order): void 
+    public function sendOrderAccepted(Order $order): void
     {
         $this->sendMail(
             $order,
@@ -104,7 +104,7 @@ final class MailService
         );
     }
 
-    public function sendOrderFinished(Order $order): void 
+    public function sendOrderFinished(Order $order): void
     {
         $this->sendMail(
             $order,
@@ -123,21 +123,42 @@ final class MailService
         );
     }
 
-    public function sendReviewRequest(Order $order): void 
+    public function sendReviewRequest(Order $order): void
     {
         $this->sendMail(
-        $order,
-        'Donnez votre avis',
-        sprintf(
-            "Bonjour %s,
+            $order,
+            'Donnez votre avis',
+            sprintf(
+                "Bonjour %s,
 
             Merci pour votre commande.
 
             Vous pouvez maintenant laisser un avis depuis votre espace client.
 
             L'équipe Vite & Gourmand",
-            $order->getUser()->getPrenom()
-        )
-    );
+                $order->getUser()->getPrenom()
+            )
+        );
+    }
+
+    public function sendContactMessage(
+        string $name,
+        string $senderEmail,
+        string $subject,
+        string $message
+    ): void {
+        $email = (new Email())
+            ->from('contact@vite-gourmand.fr')
+            ->to('contact@vite-gourmand.fr')
+            ->replyTo($senderEmail)
+            ->subject('Contact : ' . $subject)
+            ->text(sprintf(
+                "Nom : %s\nEmail : %s\n\nMessage :\n%s",
+                $name,
+                $senderEmail,
+                $message
+            ));
+
+        $this->mailer->send($email);
     }
 }
