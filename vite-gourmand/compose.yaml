@@ -76,8 +76,10 @@ services:
 
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./public:/var/www/app/public:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
     depends_on:
       php:
