@@ -25,9 +25,7 @@ class MenuType extends AbstractType
             ->add('price',null,[
                 'label' => 'Prix'
             ])
-            ->add('conditions')
             ->add('stock')
-            ->add('image')
             ->add('theme', EntityType::class, [
                 'class' => Theme::class,
                 'choice_label' => 'label',

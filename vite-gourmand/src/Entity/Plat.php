@@ -28,6 +28,9 @@ class Plat
     #[ORM\Column(length: 50)]
     private ?string $regime = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
+
     /**
      * @var Collection<int, allergene>
      */
@@ -99,6 +102,18 @@ class Plat
     public function setRegime(string $regime): static
     {
         $this->regime = $regime;
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
 
         return $this;
     }

@@ -16,7 +16,6 @@
 				<th>Price</th>
 				<th>Conditions</th>
 				<th>Stock</th>
-				<th>Image</th>
 				<th>actions</th>
 			</tr>
 		</thead>
@@ -30,7 +29,6 @@
 					<td>{{ menu.price }}</td>
 					<td>{{ menu.conditions }}</td>
 					<td>{{ menu.stock }}</td>
-					<td>{{ menu.image }}</td>
 					<td>
 						<a href="{{ path('app_menu_show', {'id': menu.id}) }}">show</a>
 						<a href="{{ path('app_menu_edit', {'id': menu.id}) }}">edit</a>
