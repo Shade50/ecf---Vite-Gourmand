@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Menu;
 use App\Repository\MenuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,14 @@ final class MenuPublicController extends AbstractController
 
         return $this->render('menu_public/index.html.twig', [
             'menus' => $menus,
+        ]);
+    }
+
+    #[Route('/menus/{id}', name: 'app_menu_public_show', methods: ['GET'])]
+    public function show(Menu $menu): Response
+    {
+        return $this->render('menu_public/show.html.twig', [
+            'menu' => $menu,
         ]);
     }
 }
