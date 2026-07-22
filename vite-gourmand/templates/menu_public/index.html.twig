@@ -7,52 +7,99 @@
 	<div class="container py-5">
 		<h1 class="mb-4">🍽️ Nos menus</h1>
 
-		<div class="row">
-			{% for menu in menus %}
-				<div class="col-md-4 mb-4">
-					<div class="card h-100 shadow-sm">
-						<div class="card-body">
-							<h2 class="h4">{{ menu.title }}</h2>
+		<div class="card shadow-sm mb-4">
+			<div class="card-body">
 
-							<p>{{ menu.description }}</p>
+				<div class="row g-3">
 
-							<p>
-								<strong>{{ menu.price }}
-									€</strong>
-								<br>
-								Minimum :
-								{{ menu.minimumPerson }}
-								personnes
-							</p>
+					<div class="col-md-2">
+						<label class="form-label">Prix min</label>
 
-							{% if menu.stock > 0 %}
-								<p class="text-success">
-									Stock disponible :
-									{{ menu.stock }}
-									commande(s)
-								</p>
-
-								<a href="{{ path('app_menu_public_show', { id: menu.id }) }}" class="btn btn_admin_setting">
-									Voir le détail
-								</a>
-
-								<a href="{{ path('app_order_create', { id: menu.id }) }}" class="btn btn_admin_setting">
-									Commander
-								</a>
-							{% else %}
-								<p class="text-danger fw-bold">
-									Rupture de stock
-								</p>
-								<button class="btn btn-secondary" disabled>
-									Commander
-								</button>
-							{% endif %}
-						</div>
+						<input type="number" id="priceMin" class="form-control">
 					</div>
+
+					<div class="col-md-2">
+						<label class="form-label">Prix max</label>
+
+						<input type="number" id="priceMax" class="form-control">
+					</div>
+
+					<div class="col-md-3">
+
+						<label class="form-label">
+							Thème
+						</label>
+
+						<select id="theme" class="form-select">
+
+							<option value="">
+								Tous
+							</option>
+
+							{% for theme in themes %}
+
+								<option value="{{ theme.id }}">
+									{{ theme.label }}
+								</option>
+
+							{% endfor %}
+
+						</select>
+
+					</div>
+
+					<div class="col-md-3">
+
+						<label class="form-label">
+
+							Régime
+
+						</label>
+
+						<select id="regime" class="form-select">
+
+							<option value="">
+								Tous
+							</option>
+
+							{% for regime in regimes %}
+
+								<option value="{{ regime }}">
+									{{ regime }}
+								</option>
+
+							{% endfor %}
+
+						</select>
+
+					</div>
+
+					<div class="col-md-2">
+
+						<label class="form-label">
+
+							Personnes
+
+						</label>
+
+						<input type="number" id="numberOfPeople" min="1" class="form-control">
+
+					</div>
+
 				</div>
-			{% else %}
-				<p>Aucun menu disponible actuellement.</p>
-			{% endfor %}
+
+			</div>
+
+		</div>
+
+		<div id="menus-container">
+
+			{% include 'menu_public/_menu_cards.html.twig' %}
+
 		</div>
 	</div>
+	{% block javascripts %}
+		{{ parent() }}
+		<script src="{{ asset('js/menu-filter.js') }}"></script>
+	{% endblock %}
 {% endblock %}

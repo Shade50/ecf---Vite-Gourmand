@@ -16,28 +16,57 @@ class MenuRepository extends ServiceEntityRepository
         parent::__construct($registry, Menu::class);
     }
 
-//    /**
-//     * @return Menu[] Returns an array of Menu objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * Recherche les menus selon les filtres sélectionnés.
+     *
+     * @return Menu[]
+     */
+    public function findByFilters(
+        ?float $priceMin,
+        ?float $priceMax,
+        ?int $themeId,
+        ?string $regime,
+        ?int $numberOfPeople
+    ): array {
+        $queryBuilder = $this->createQueryBuilder('menu')
+            ->select('DISTINCT menu')
+            ->leftJoin('menu.theme', 'theme')
+            ->leftJoin('menu.plats', 'plat')
+            ->addSelect('theme')
+            ->orderBy('menu.price', 'ASC');
 
-//    public function findOneBySomeField($value): ?Menu
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($priceMin !== null) {
+            $queryBuilder
+                ->andWhere('menu.price >= :priceMin')
+                ->setParameter('priceMin', $priceMin);
+        }
+
+        if ($priceMax !== null) {
+            $queryBuilder
+                ->andWhere('menu.price <= :priceMax')
+                ->setParameter('priceMax', $priceMax);
+        }
+
+        if ($themeId !== null) {
+            $queryBuilder
+                ->andWhere('theme.id = :themeId')
+                ->setParameter('themeId', $themeId);
+        }
+
+        if ($regime !== null && $regime !== '') {
+            $queryBuilder
+                ->andWhere('plat.regime = :regime')
+                ->setParameter('regime', $regime);
+        }
+
+        if ($numberOfPeople !== null) {
+            $queryBuilder
+                ->andWhere('menu.minimumPerson <= :numberOfPeople')
+                ->setParameter('numberOfPeople', $numberOfPeople);
+        }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
 }
