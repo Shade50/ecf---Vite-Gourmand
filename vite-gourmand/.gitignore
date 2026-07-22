@@ -24,3 +24,7 @@
 ### Projet ###
 vite_gourmand.sql
 ###< Projet ###
+
+# Uploads des photos des plats
+/public/uploads/plats/*
+!/public/uploads/plats/.gitkeep
