@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Déposer un avis{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+
+                    <h1 class="text-center mb-4">
+                        Déposer un avis
+                    </h1>
+
+                    <p class="text-center text-muted mb-4">
+                        Votre avis sera vérifié avant sa publication.
+                    </p>
+
+                    {{ form_start(reviewForm) }}
+
+                        <div class="mb-3">
+                            {{ form_row(reviewForm.note) }}
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form_row(reviewForm.description) }}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+
+                            <a href="{{ path('app_profile') }}" class="btn btn-outline-secondary">
+                                Retour
+                            </a>
+
+                            <button class="btn btn-primary">
+                                Envoyer mon avis
+                            </button>
+
+                        </div>
+
+                    {{ form_end(reviewForm) }}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
