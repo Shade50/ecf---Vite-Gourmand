@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Entity\OrderStatusHistory;
+use App\Entity\Review;
 use App\Repository\OrderRepository;
+use App\Repository\ReviewRepository;
 use App\Service\DeliveryFeeCalculator;
 use App\Service\MailService;
 use DateTimeImmutable;
@@ -13,11 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
-
-
-
-
 
 
 final class EmployeeController extends AbstractController
@@ -53,44 +50,119 @@ final class EmployeeController extends AbstractController
             ],
         ]);
     }
-
-    // #[Route('/employee', name: 'app_employee_index', methods: ['GET'])]
-    // public function index(
-    //     Request $request,
-    //     OrderRepository $orderRepository,
-    // ): Response {
-    //     $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
-
-    //     $search = trim((string) $request->query->get('search', ''));
-    //     $status = trim((string) $request->query->get('status', ''));
-
-    //     $orders = $orderRepository->findForEmployee(
-    //         $search,
-    //         $status
-    //     );
+    //################################################
+    //              gestion des avis                ##
+    //################################################
 
 
-    //     return $this->render('employee/index.html.twig', [
-    //         'orders' => $orders,
-    //         'search' => $search,
-    //         'currentStatus' => $status,
-    //         'statuses' => [
-    //             'En attente',
-    //             'Acceptée',
-    //             'en préparation',
-    //             'En cours de livraison',
-    //             'En attente du retour de matériel',
-    //             'Terminée',
-    //             'Annulée'
-    //         ],
-    //     ]);
-    // }
+    //################################################
+    //          liste les avis en pending           ##
+    //################################################
+    #[Route('/employee/reviews', name: 'app_employee_reviews', methods: ['GET'])]
+    public function reviews(
+        ReviewRepository $reviewRepository
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
+
+        $reviews = $reviewRepository->findBy(
+            ['statut' => 'pending'],
+            ['id' => 'DESC']
+        );
+
+        return $this->render('employee/reviews.html.twig', [
+            'reviews' => $reviews,
+        ]);
+    }
+
+    //################################################
+    //          methode approve des avis            ##
+    //################################################
+
+    #[Route(
+        '/employee/review/{id}/approve',
+        name: 'app_employee_review_approve',
+        methods: ['POST']
+    )]
+    public function approve(
+        Review $review,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
+
+        if (!$this->isCsrfTokenValid(
+            'approve-review-' . $review->getId(),
+            (string) $request->request->get('_token')
+        )) {
+            throw $this->createAccessDeniedException(
+                'Jeton de sécurité invalide.'
+            );
+        }
+
+        $review->setStatut('approved');
+
+        $entityManager->flush();
+
+        $this->addFlash(
+            'success',
+            'L\'avis a été validé.'
+        );
+
+        return $this->redirectToRoute('app_employee_reviews');
+    }
+
+    //################################################
+    //          Methode reject des avis             ##
+    //################################################
+
+    #[Route(
+        '/employee/review/{id}/reject',
+        name: 'app_employee_review_reject',
+        methods: ['POST']
+    )]
+    public function reject(
+        Review $review,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
+
+        if (!$this->isCsrfTokenValid(
+            'reject-review-' . $review->getId(),
+            (string) $request->request->get('_token')
+        )) {
+            throw $this->createAccessDeniedException(
+                'Jeton de sécurité invalide.'
+            );
+        }
+
+        $review->setStatut('rejected');
+
+        $entityManager->flush();
+
+        $this->addFlash(
+            'success',
+            'L\'avis a été refusé.'
+        );
+
+        return $this->redirectToRoute('app_employee_reviews');
+    }
+
+
 
     #[Route('/employee', name: 'app_employee_index')]
-    public function orders(): Response
-    {
+    public function orders(
+        ReviewRepository $reviewRepository
+    ): Response {
         $this->denyAccessUnlessGranted('ROLE_EMPLOYEE');
-        return $this->render('employee/index.html.twig');
+
+        $pendingReviewsCount = $reviewRepository->count([
+            'statut' => 'pending',
+        ]);
+
+        return $this->render('employee/index.html.twig', [
+            'pendingReviewsCount' => $pendingReviewsCount,
+        ]);
     }
 
     #[Route(

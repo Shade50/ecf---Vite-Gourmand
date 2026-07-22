@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des avis
+{% endblock %}
+
+{% block body %}
+	<div class="container py-5">
+		<div class="row justify-content-center">
+			<div class="col-lg-6">
+				<h1 class="mb-4">Gestion des avis</h1>
+
+				{% if reviews is empty %}
+
+					<div class="alert alert-success">
+						Aucun avis en attente de validation.
+					</div>
+
+				{% else %}
+
+					{% for review in reviews %}
+
+						<div class="card shadow-sm mb-4">
+							<div class="card-body">
+
+								<h5 class="card-title mb-3">
+									{{ review.user.prenom | capitalize }}
+									{{ review.user.nom | upper }}
+								</h5>
+
+								<p class="mb-2">
+									<strong>Note :</strong>
+									⭐
+									{{ review.note }}/5
+								</p>
+
+								<p class="card-text">
+									{{ review.description }}
+								</p>
+								<hr>
+								<div class="d-flex justify-content-end gap-3 mt-35">
+
+									<form method="post" action="{{ path('app_employee_review_approve', {'id': review.id}) }}">
+										<input type="hidden" name="_token" value="{{ csrf_token('approve-review-' ~ review.id) }}">
+										<button type="submit" class="btn btn-success">
+											Valider
+										</button>
+									</form>
+
+									<form method="post" action="{{ path('app_employee_review_reject', {'id': review.id}) }}">
+										<input type="hidden" name="_token" value="{{ csrf_token('approve-review-' ~ review.id) }}">
+										<button type="submit" class="btn btn-danger">
+											Refuser
+										</button>
+									</form>
+
+								</div>
+
+							</div>
+						</div>
+
+					{% endfor %}
+
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
