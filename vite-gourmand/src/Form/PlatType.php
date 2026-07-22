@@ -7,9 +7,10 @@ use App\Entity\Menu;
 use App\Entity\Plat;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-// use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 
 
@@ -24,9 +25,21 @@ class PlatType extends AbstractType
             ->add('description')
             ->add('type')
             ->add('regime')
-            ->add('photo', null, [
+            ->add('photoFile', FileType::class, [
                 'label' => 'Photo du plat',
+                'mapped' => false,
                 'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez sélectionner une image JPG, PNG ou WebP.',
+                    ]),
+                ],
             ])
             ->add('allergenes', EntityType::class, [
                 'class' => Allergene::class,

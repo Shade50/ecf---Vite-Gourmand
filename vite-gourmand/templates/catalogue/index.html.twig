@@ -6,7 +6,7 @@
 {% block body %}
 
 	<div class="container py-5">
-    <a href="{{ path('app_admin')}}" class="btn btn_admin_setting btn_admin_menu">Retour</a>
+		<a href="{{ path('app_admin')}}" class="btn btn_admin_setting btn_admin_menu">Retour</a>
 		<h1 class="text-center mb-4">Gestion du catalogue</h1>
 		<div class="row g-4">
 			<div
@@ -112,4 +112,8 @@
 
 
 				</div>
+			{% endblock %}
+			{% block javascripts %}
+				{{ parent() }}
+				<script src="{{ asset('js/plat-photo-compress.js') }}"></script>
 			{% endblock %}
