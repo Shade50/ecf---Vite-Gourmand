@@ -1,98 +1,155 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ menu.title }} - Vite & Gourmand{% endblock %}
+{% block title %}
+	{{ menu.title }}
+	- Vite & Gourmand
+{% endblock %}
 
 {% block body %}
-<div class="container py-5">
+	<div class="container py-5">
 
-    <a href="{{ path('app_menu_public') }}"
-       class="btn btn-outline-secondary mb-4">
-        ← Retour aux menus
-    </a>
+		<a href="{{ path('app_menu_public') }}" class="btn btn-outline-secondary mb-4">
+			← Retour aux menus
+		</a>
 
-    <div class="card shadow-sm overflow-hidden mx-auto" style="max-width: 600px;">
-        <div class="row g-0">
-            <div class="col-12">
-                <div class="card-body p-4 p-lg-5">
+		<div class="card shadow-sm overflow-hidden mx-auto" style="max-width: 600px;">
+			<div class="row g-0">
+				<div class="col-12">
+					<div class="card-body p-4 p-lg-5">
 
-                    {% if menu.theme %}
-                        <span class="badge text-bg-secondary mb-3">
-                            {{ menu.theme.label }}
-                        </span>
-                    {% endif %}
+						{% if menu.theme %}
+							<span class="badge text-bg-secondary mb-3">
+								{{ menu.theme.label }}
+							</span>
+						{% endif %}
 
-                    <h1 class="card-title mb-3">{{ menu.title }}</h1>
+						<h1 class="card-title mb-3">{{ menu.title }}</h1>
 
-                    <p class="lead">
-                        {{ menu.description }}
-                    </p>
+						<p class="lead">
+							{{ menu.description }}
+						</p>
 
-                    <hr>
+						<hr>
 
-                    <div class="row mb-4">
-                        <div class="col-sm-6">
-                            <strong>Prix :</strong>
-                            {{ menu.price|number_format(2, ',', ' ') }} €
-                        </div>
+						<div class="row mb-4">
+							<div class="col-sm-6">
+								<strong>Prix :</strong>
+								{{ menu.price|number_format(2, ',', ' ') }}
+								€
+							</div>
 
-                        <div class="col-sm-6">
-                            <strong>Minimum :</strong>
-                            {{ menu.minimumPerson }} personne(s)
-                        </div>
-                    </div>
+							<div class="col-sm-6">
+								<strong>Minimum :</strong>
+								{{ menu.minimumPerson }}
+								personne(s)
+							</div>
+						</div>
 
-                    {# {% if menu.conditions %}
-                        <div class="alert alert-info">
-                            <strong>Conditions :</strong>
-                            {{ menu.conditions }}
-                        </div>
-                    {% endif %} #}
+						{# {% if menu.conditions %}
+																								                        <div class="alert alert-info">
+																								                            <strong>Conditions :</strong>
+																								                            {{ menu.conditions }}
+																								                        </div>
+																								                    {% endif %} #}
 
-                    <h2 class="h4 mt-4">Composition du menu</h2>
+						<h2 class="h4 mt-4">Galerie</h2>
 
-                    {% if menu.plats is not empty %}
-                        <div class="list-group mb-4">
-                            {% for plats in menu.plats %}
-                                <div class="list-group-item">
-                                    <h3 class="h6 mb-1">{{ plats.title }}</h3>
+						{% set photos = menu.plats|filter(plat => plat.photo) %}
 
-                                    {% if plats.description %}
-                                        <p class="mb-0 text-muted">
-                                            {{ plats.description }}
-                                        </p>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="text-muted">
-                            Aucun plat n’est actuellement associé à ce menu.
-                        </p>
-                    {% endif %}
+						{% if photos is not empty %}
+							<div class="row g-3 mb-4">
 
-                    {% if menu.stock > 0 %}
-                        <p class="text-success fw-bold">
-                            Stock disponible : {{ menu.stock }} commande(s)
-                        </p>
+								{% for plat in photos %}
+									<div class="col-6 col-md-4">
 
-                        <a href="{{ path('app_order_create', { id: menu.id }) }}"
-                           class="btn btn_admin_setting">
-                            Commander ce menu
-                        </a>
-                    {% else %}
-                        <p class="text-danger fw-bold">
-                            Rupture de stock
-                        </p>
+										<img src="{{ asset('uploads/plats/' ~ plat.photo) }}" alt="{{ plat.title }}" class="img-fluid rounded shadow-sm" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#photoModal{{ plat.id }}">
 
-                        <button class="btn btn btn_admin_setting" disabled>
-                            Commander ce menu
-                        </button>
-                    {% endif %}
+									</div>
 
-                </div>
-            </div>
+									<div class="modal fade" id="photoModal{{ plat.id }}" tabindex="-1" aria-labelledby="photoModalLabel{{ plat.id }}" aria-hidden="true">
+										<div class="modal-dialog modal-lg modal-dialog-centered">
 
-        </div>
-    </div>
-</div>
+											<div class="modal-content">
+
+												<div class="modal-header">
+
+													<h2 class="modal-title fs-5" id="photoModalLabel{{ plat.id }}">
+														{{ plat.title }}
+													</h2>
+
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+
+												</div>
+
+												<div class="modal-body text-center">
+
+													<img src="{{ asset('uploads/plats/' ~ plat.photo) }}" alt="{{ plat.title }}" class="img-fluid rounded">
+
+												</div>
+
+											</div>
+
+										</div>
+									</div>
+
+								{% endfor %}
+
+							</div>
+						{% else %}
+							<p class="text-muted">
+								Aucune photo n’est disponible pour ce menu.
+							</p>
+						{% endif %}
+
+
+						<h2 class="h4 mt-4">Composition du menu</h2>
+
+						{% if menu.plats is not empty %}
+							<div class="list-group mb-4">
+								{% for plats in menu.plats %}
+									<div class="list-group-item">
+										<h3 class="h6 mb-1">{{ plats.title }}</h3>
+
+										{% if plats.description %}
+											<p class="mb-0 text-muted">
+												{{ plats.description }}
+											</p>
+										{% endif %}
+									</div>
+								{% endfor %}
+							</div>
+						{% else %}
+							<p class="text-muted">
+								Aucun plat n’est actuellement associé à ce menu.
+							</p>
+						{% endif %}
+
+						{% if menu.stock > 0 %}
+							<p class="text-success fw-bold">
+								Stock disponible :
+								{{ menu.stock }}
+								commande(s)
+							</p>
+
+							<a href="{{ path('app_order_create', { id: menu.id }) }}" class="btn btn_admin_setting">
+								Commander ce menu
+							</a>
+						{% else %}
+							<p class="text-danger fw-bold">
+								Rupture de stock
+							</p>
+
+							<button class="btn btn btn_admin_setting" disabled>
+								Commander ce menu
+							</button>
+						{% endif %}
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
 {% endblock %}
+
