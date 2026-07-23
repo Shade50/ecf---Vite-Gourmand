@@ -1,6 +1,6 @@
-console.log('Script compression chargé');
-alert("SCRIPT CHARGÉ");
-console.log("SCRIPT CHARGÉ");
+// console.log('Script compression chargé');
+// alert("SCRIPT CHARGÉ");
+// console.log("SCRIPT CHARGÉ");
 
 document.addEventListener('DOMContentLoaded', () => {
     const photoInput = document.querySelector(
