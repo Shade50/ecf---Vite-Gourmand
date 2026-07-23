@@ -30,6 +30,10 @@ RUN composer install \
 
 COPY . /var/www/app
 
+RUN mkdir -p /var/www/app/public/uploads/plats \
+    && chown -R www-data:www-data /var/www/app/public/uploads \
+    && chmod -R 775 /var/www/app/public/uploads
+
 RUN composer dump-autoload --optimize \
     && mkdir -p var/cache var/log \
     && chown -R www-data:www-data var
