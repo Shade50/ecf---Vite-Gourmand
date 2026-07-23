@@ -1,0 +1,155 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vite & Gourmand
+{% endblock %}
+
+{% block body %}
+
+	<div class="container py-5">
+
+		<h1 class="mb-4">Conditions Générales de Vente</h1>
+
+		<div class="card shadow-sm">
+			<div class="card-body">
+
+				<h2 class="h4">1. Objet</h2>
+
+				<p>
+					Les présentes Conditions Générales de Vente définissent les
+															                modalités de commande des menus proposés par
+															                Vite & Gourmand.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">2. Produits</h2>
+
+				<p>
+					Les menus sont présentés avec leur composition, leur prix,
+															                leur nombre minimum de personnes ainsi que les photographies
+															                des plats lorsqu'elles sont disponibles.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">3. Commande</h2>
+
+				<p>
+					Toute commande nécessite la création d'un compte utilisateur.
+															
+															                Une confirmation est envoyée par courrier électronique après
+															                validation de la commande.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">4. Prix</h2>
+
+				<p>
+					Les prix sont exprimés en euros TTC.
+															
+															                Les frais de livraison sont calculés automatiquement lors
+															                de la commande.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">5. Livraison</h2>
+
+				<p>
+					La livraison est effectuée à l'adresse indiquée lors de
+															                la commande.
+															
+															                Les frais sont calculés en fonction de la distance entre
+															                le restaurant et l'adresse de livraison.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">6. Modification ou annulation</h2>
+
+				<p>
+					Une commande peut être modifiée ou annulée uniquement tant
+															                qu'elle est en attente de traitement.
+															
+															                Dès qu'elle est acceptée par un employé, aucune modification
+															                ou annulation n'est possible.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">7. Prêt et restitution du matériel</h2>
+				<p>
+
+					Dans le cadre de certaines prestations, Vite & Gourmand peut mettre du matériel à disposition du client. Ce matériel demeure la propriété exclusive de Vite & Gourmand et est prêté uniquement pour la durée nécessaire à la réalisation de la prestation.
+					
+					À la fin de la prestation, ou dès que celle-ci est indiquée comme terminée, le client reçoit un courrier électronique lui rappelant son obligation de restituer le matériel prêté.
+					
+					Le client dispose d'un délai de 10 jours ouvrés à compter de la réception de cette notification pour restituer le matériel.
+					
+					À défaut de restitution dans ce délai, des frais forfaitaires de 600 € TTC seront facturés au client afin de couvrir les frais de remplacement du matériel.
+					
+					Pour organiser la restitution, le client est invité à prendre contact avec Vite & Gourmand en répondant au courrier électronique reçu ou en utilisant les coordonnées de contact mises à sa disposition.
+
+				</p>
+				<hr>
+
+				<h2 class="h4">8. Disponibilité</h2>
+
+				<p>
+					Les commandes sont acceptées dans la limite du stock
+															                disponible.
+															
+															                Un menu en rupture de stock ne peut plus être commandé.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">9. Compte utilisateur</h2>
+
+				<p>
+					L'utilisateur est responsable des informations fournies lors
+															                de la création de son compte ainsi que de la confidentialité
+															                de ses identifiants.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">10. Données personnelles</h2>
+
+				<p>
+					Les informations collectées sont utilisées uniquement pour
+															                assurer le traitement des commandes et le fonctionnement
+															                de l'application.
+															
+															                Elles ne sont jamais revendues à des tiers.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">11. Droit applicable</h2>
+
+				<p>
+					Les présentes Conditions Générales de Vente sont soumises
+															                au droit français.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">12. Contact</h2>
+
+				<p>
+					Pour toute question concernant une commande ou le
+															                fonctionnement du site :
+
+					<br><br>
+
+					<strong>{{site_settings().Email}}</strong>
+				</p>
+
+			</div>
+		</div>
+
+	</div>
+
+{% endblock %}
