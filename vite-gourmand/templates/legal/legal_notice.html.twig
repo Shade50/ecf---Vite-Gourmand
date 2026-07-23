@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vite & Gourmand
+{% endblock %}
+
+{% block body %}
+
+	<div class="container py-5">
+
+		<h1 class="mb-4">Mentions légales</h1>
+
+		<div class="card shadow-sm">
+			<div class="card-body">
+
+				<h2 class="h4">Éditeur du site</h2>
+
+				<p>
+					<strong>Vite & Gourmand</strong><br>
+					Restaurant de vente de menus en ligne.<br><br>
+
+					{{site_settings().Address}}<br>
+					{{site_settings().PostalCode}} {{site_settings().City}}<br>
+					France<br><br>
+
+					Téléphone : {{site_settings().Phone}}<br>
+					Email : {{site_settings().Email}}
+				</p>
+
+				<hr>
+
+				<h2 class="h4">Directeur de publication</h2>
+
+				<p>
+					Le responsable de la publication est le gérant de
+										Vite & Gourmand.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">Hébergement</h2>
+
+				<p>
+					Cette application a été développée dans le cadre d'un projet
+															de formation et est hébergée sur un serveur VPS Linux.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">Propriété intellectuelle</h2>
+
+				<p>
+					Les contenus présents sur ce site (textes, images,
+															illustrations, logos et éléments graphiques) sont protégés
+															par le Code de la propriété intellectuelle.
+																									
+															Toute reproduction totale ou partielle est interdite sans
+															autorisation préalable.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">Données personnelles</h2>
+
+				<p>
+					Les données collectées sont utilisées uniquement pour
+															assurer le fonctionnement de l'application et la gestion
+															des commandes.
+																									
+															Elles ne sont ni vendues ni communiquées à des tiers.
+																									
+															Conformément au RGPD, chaque utilisateur dispose d'un droit
+															d'accès, de rectification et de suppression de ses données.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">Cookies</h2>
+
+				<p>
+					Le site utilise uniquement les cookies nécessaires à son
+															bon fonctionnement.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">Responsabilité</h2>
+
+				<p>
+					Vite & Gourmand met tout en œuvre pour fournir des
+															informations exactes mais ne peut garantir l'absence
+															d'erreurs ou d'omissions.
+				</p>
+
+				<hr>
+
+				<h2 class="h4">Contact</h2>
+
+				<p>
+					{{site_settings().Email}}
+				</p>
+
+			</div>
+		</div>
+
+	</div>
+
+{% endblock %}
