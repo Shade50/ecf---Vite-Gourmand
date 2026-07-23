@@ -3,8 +3,10 @@
 namespace App\Service;
 
 use App\Entity\Order;
+use App\Entity\User;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+
 
 final class MailService
 {
@@ -157,6 +159,30 @@ final class MailService
                 $name,
                 $senderEmail,
                 $message
+            ));
+
+        $this->mailer->send($email);
+    }
+
+    public function sendEmployeeAccountCreated(User $user): void
+    {
+        $email = (new Email())
+            ->from('contact@vite-gourmand.fr')
+            ->to($user->getEmail())
+            ->subject('Votre compte employé Vite & Gourmand a été créé')
+            ->text(sprintf(
+                "Bonjour %s,
+
+                Votre compte employé Vite & Gourmand a bien été créé.
+
+                Vous pouvez désormais vous connecter à l'application.
+
+                Pour obtenir votre mot de passe de connexion, merci de vous rapprocher de votre administrateur.
+
+                À bientôt,
+
+                L'équipe Vite & Gourmand",
+                $user->getPrenom()
             ));
 
         $this->mailer->send($email);

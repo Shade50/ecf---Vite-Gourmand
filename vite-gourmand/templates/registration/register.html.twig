@@ -33,7 +33,9 @@
 
 
 					<div class="mt-3 mb-2 d-flex justify-content-center gap-3">
+
 						<button type="submit" class="btn btn_admin_setting mr-5">Créer mon compte</button>
+						
 						{% if is_granted('ROLE_ADMIN') %}
 							<a href="{{ path('app_admin') }}" class="btn btn_admin_setting mr-5">
 								Retour
