@@ -30,9 +30,24 @@
 				</p>
 			</div>
 
-			<a href="{{ path('app_employee_index') }}" class="btn btn-outline-secondary">
-				← Retour aux commandes
-			</a>
+			{# <a href="{{ path('app_employee_index') }}" class="btn btn-outline-secondary">
+							← Retour aux commandes
+						</a> #}
+
+			{% if is_granted('ROLE_ADMIN') %}
+				<div class="d-flex justify-content-center mt-1 gap-5">
+					<button type="submit" class="btn btn_admin_setting btn_admin_menu">
+						<i class="bi bi-floppy me-2"></i>← Retour aux commandes</button>
+					<a href="{{path('app_employee_orders')}}" class="btn btn_admin_setting btn_admin_menu">Retour</a>
+				</div>
+			{% elseif is_granted('ROLE_EMPLOYEE') %}
+				<div class="d-flex justify-content-center mt-1 gap-5">
+					<button type="submit" class="btn btn_admin_setting btn_admin_menu">
+						<i class="bi bi-floppy me-2"></i>← Retour aux commandes</button>
+					<a href="{{path('app_employee_orders')}}" class="btn btn_admin_setting btn_admin_menu">Retour</a>
+				</div>
+			{% endif %}
+
 		</div>
 
 		<div
@@ -251,8 +266,8 @@
 
 								<div class="col-md-6 d-grid">
 									<button type="submit" name="action" value="cancel" class="btn btn-danger" onclick="return confirm(
-																																																																																						                'Confirmer l’annulation de cette commande ?'
-																																																																																						            );">
+																																																																																																	                'Confirmer l’annulation de cette commande ?'
+																																																																																																	            );">
 										Annuler la commande
 									</button>
 								</div>
